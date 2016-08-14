@@ -5,6 +5,17 @@
 4. 各层抽象公共父类 -- 未完
 5. service层使用抽象父类 -- 未完
 
+# 使用
+1. eclipse的git导入
+2. 转为maven项目
+3. 配置project fact，转为web项目
+4. 数据库初始化，/xst/src/main/resources/sql/schema_2016-8-15.sql
+5. tomcat中启动运行
+
+# 接口测试工具
+建议：postman 
+
+
 #优雅的SSM架构(Spring+SpringMVC+Mybatis）
 - Maven
 - Spring（IOC DI AOP 声明式事务处理）
