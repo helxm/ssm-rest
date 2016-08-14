@@ -38,9 +38,20 @@
         <!--配置mybatis全局配置文件:mybatis-config.xml-->
         <property name="configLocation" value="classpath:mybatis-config.xml"/>
         <!--扫描entity包,使用别名,多个用;隔开-->
-        <property name="typeAliasesPackage" value="com.yingjun.ssm.entity"/>
+        <property name="typeAliasesPackage" value="com.app.entity"/>
         <!--扫描sql配置文件:mapper需要的xml文件-->
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        <property name="plugins">
+           <array>
+               <bean class="com.github.pagehelper.PageHelper">
+                   <property name="properties">
+                       <value>
+                           dialect=mysql
+                       </value>
+                   </property>
+               </bean>
+           </array>
+        </property>
     </bean>
 
     <!--4、配置扫描Dao接口包,动态实现DAO接口,注入到spring容器-->
@@ -48,7 +59,7 @@
         <!--注入SqlSessionFactory-->
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
         <!-- 给出需要扫描的Dao接口-->
-        <property name="basePackage" value="com.yingjun.ssm.dao"/>
+        <property name="basePackage" value="com.app.dao"/>
     </bean>
 
 </beans>

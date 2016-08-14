@@ -1,3 +1,10 @@
+# 改进更新-he
+1. 使用restcontroller
+2. 增加mybatis generrator
+3. 增加mybatis 分页插件PageHelper
+4. 各层抽象公共父类 -- 未完
+5. service层使用抽象父类 -- 未完
+
 #优雅的SSM架构(Spring+SpringMVC+Mybatis）
 - Maven
 - Spring（IOC DI AOP 声明式事务处理）

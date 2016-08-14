@@ -13,7 +13,7 @@
 
 
     <!-- 激活组件扫描功能,扫描aop的相关组件组件 -->
-    <context:component-scan base-package="com.yingjun.ssm.aop"/>
+    <context:component-scan base-package="com.app.aop"/>
     <!-- 启动对@AspectJ注解的支持 -->
     <aop:aspectj-autoproxy proxy-target-class="true" />
 
@@ -37,9 +37,9 @@
     </bean>
 
     <!--扫描web相关的controller-->
-    <context:component-scan base-package="com.yingjun.ssm.web"/>
+    <context:component-scan base-package="com.app.web"/>
 
 	<!--全局异常捕捉 -->
-	<bean class="com.yingjun.ssm.exception.GlobalExceptionResolver" />
+	<bean class="com.app.exception.GlobalExceptionResolver" />
 
 </beans>
