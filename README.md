@@ -11,6 +11,7 @@
 3. 配置project fact，转为web项目
 4. 数据库初始化，/xst/src/main/resources/sql/schema_2016-8-15.sql
 5. tomcat中启动运行
+6. 浏览器中访问：{{}}/xst/news/news_list 
 
 # 接口测试工具
 建议：postman 
