@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.rainbowbus.mapper.CategoryMapper">
+    <insert id="insert" parameterType="com.rainbowbus.bean.api.CategoryBean" useGeneratedKeys="true" keyColumn="id">
+       insert into 
+       		p_category(name,nameEn, itemValue,item,itemValueEn,pictureUrl) 
+       values
+       		(#{name}, #{nameEn},#{itemValue},#{item},#{itemValueEn},#{pictureUrl})
+    </insert>
+   
+    <update id="updateByPrimaryKey" parameterType="com.rainbowbus.bean.api.CategoryBean">
+       update 
+       		p_category 
+       set 
+       		name=#{name}, itemValue=#{itemValue},item=#{item} ,itemValueEn=#{itemValueEn},nameEn=#{nameEn}
+       	where 
+       		id=#{id}
+    </update>
+   
+    <select id="selectByPrimaryKey" parameterType="long" resultType="com.rainbowbus.bean.api.CategoryBean">
+       select * from p_category where id=#{id}
+    </select>
+    <select id="findBytypeAndName" resultType="com.rainbowbus.bean.api.CategoryBean">
+       select * from p_category where name=#{0} and itemValue=#{1}
+    </select>
+   
+    <delete id="deleteByPrimaryKey" parameterType="int">
+       update p_category set isDelated='0' where id=#{id}
+    </delete>
+    
+    <!-- 返回一个list，不分页 -->
+    <select id="queryAll" resultType="com.rainbowbus.bean.api.CategoryBean" >
+        select * from p_category 
+    </select>
+    <!-- 返回所有类别类型 -->
+    <select id="findAllByName" resultType="com.rainbowbus.bean.api.CategoryBean" >
+        select c.* from p_category c where 1 = 1
+        <if test="name != null">
+	    	and 
+	    		c.name = #{name} 
+	    </if>
+       	<if test="nameEn != null">
+	    	and 
+	    		c.nameEn = #{nameEn} 
+	    </if>
+       	<if test="funcNumber == null">
+	    	and 
+	    		c.funcNumber = '0'
+	    </if>
+       	<if test="funcNumber != null">
+	    	and 
+	    		c.funcNumber in(#{function},'0')  
+	    </if>
+	    order by c.name,c.item 
+    </select>
+    <!-- 返回用户类别类型 -->
+    <select id="findUserCategorys" resultType="com.rainbowbus.bean.api.CategoryBean" >
+        select 
+        	c.* 
+        from 
+        	p_category c
+        left join 
+        	p_category_user cu
+        on
+        	c.id = cu.categoryId
+        where 
+        	cu.userId = #{userId}
+       	<if test="name != null">
+	    	and 
+	    		c.name = #{name} 
+	    </if>
+       	<if test="nameEn != null">
+	    	and 
+	    		c.nameEn = #{nameEn} 
+	    </if>
+	    order by 
+	    	item
+    </select>
+    
+    <!-- 返回一个list，分页 -->
+    <select id="queryPage" resultType="com.rainbowbus.bean.api.CategoryBean" >
+        select * from p_category limit #${0},#${1}
+    </select>
+    
+    <!-- 返回记录数 -->
+    <select id="countAll" resultType="long" >
+        select count(*) from p_category
+    </select>
+    
+    <!-- 返回记录数 带条件-->
+    <select id="countByCondition" resultType="long" >
+        select count(*) from p_category where 1=1 and userId=#{0}  and (createTime between #{1} and #{2})
+   </select>
+    
+    <!-- 示例 ： 配置一个resultMap 指定返回的类型 -->
+    <!-- <resultMap id="listAll" type="CategoryBean">
+        <id column="dp_id" property="dp_id" />
+        <result column="dp_name" property="dp_name" />
+        <result column="cost_center" property="cost_center" />
+    </resultMap> -->
+</mapper>

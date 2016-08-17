@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.rainbowbus.mapper.VoteMapper">
+    <insert id="insert" parameterType="com.rainbowbus.bean.api.VoteBean" useGeneratedKeys="true" keyColumn="id">
+       insert into 
+       		${tableName}(objId, userId,createName,createTime,isDelated) 
+       values
+       		(#{objId}, #{userId},#{createName},#{createTime},'1')
+    </insert>
+   
+    <update id="updateByPrimaryKey" parameterType="com.rainbowbus.bean.api.VoteBean">
+       update 
+       		${tableName} 
+       set 
+       		name=#{name}, itemValue=#{itemValue},item=#{item} ,itemValueEn=#{itemValueEn}
+       	where 
+       		id=#{id}
+    </update>
+   
+    <select id="selectByPrimaryKey" parameterType="long" resultType="com.rainbowbus.bean.api.VoteBean">
+       select * from ${tableName} where id=#{id}
+    </select>
+    <select id="findUserVoteForObj" resultType="com.rainbowbus.bean.api.VoteBean">
+       select * from ${tableName} where objId=${objId} and userId='${userId}' and isDelated='1'
+    </select>
+   
+    <delete id="deleteByPrimaryKey" parameterType="Long">
+       update ${tableName} set isDelated='0' where id=#{id}
+    </delete>
+    
+    <!-- 删除点赞 -->
+    <delete id="deleteVote" >
+       update ${tableName} set isDelated='0' where id=${id}
+    </delete>
+    
+    <!-- 返回一个list，不分页 -->
+    <select id="queryAll" resultType="com.rainbowbus.bean.api.VoteBean" >
+        select * from ${tableName} 
+    </select>
+    
+    <!-- 返回一个list，分页 -->
+    <select id="queryPage" resultType="com.rainbowbus.bean.api.VoteBean" >
+        select * from ${tableName} limit #${0},#${1}
+    </select>
+    
+    <!-- 返回记录数 -->
+    <select id="countAll" resultType="long" >
+        select count(*) from p_vote
+    </select>
+    
+    <!-- 返回记录数 带条件-->
+    <select id="countByCondition" resultType="long" >
+        select count(*) from ${tableName} where 1=1 and userId=#{0}  and (createTime between #{1} and #{2})
+    </select>
+   
+    <!-- 给文章添加赞数-->
+    <update id="addNewsVoteCount" >
+       update ${objTable} set voteCount = ${count} where id = ${objId} 
+    </update>
+   
+   <!-- 统计该文章的所有赞-->
+    <select id="countNewsUserVote" resultType="Long" >
+       select count(*) from ${tableName} where objId=${objId} and isDelated='1'
+    </select>
+    
+    <!-- 示例 ： 配置一个resultMap 指定返回的类型 -->
+    <!-- <resultMap id="listAll" type="VoteBean">
+        <id column="dp_id" property="dp_id" />
+        <result column="dp_name" property="dp_name" />
+        <result column="cost_center" property="cost_center" />
+    </resultMap> -->
+</mapper>
