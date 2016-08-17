@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop.xsd 
+					    http://www.springframework.org/schema/mvc      
+          				http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd  
+						http://www.springframework.org/schema/cache 
+						http://www.springframework.org/schema/cache/spring-cache-3.1.xsd
+        				http://www.springframework.org/schema/task  
+						http://www.springframework.org/schema/task/spring-task-3.1.xsd" 
+						default-lazy-init="true">
+
+
+	<context:component-scan base-package="com.rainbowbus" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+	<!--<context:annotation-config/>-->
+	<!-- 	<task:annotation-driven/> 	   -->
+	<task:annotation-driven/>
+	<mvc:annotation-driven />
+	<!-- 定时器 -->
+	<bean class="com.rainbowbus.timer.SendPushTag" lazy-init="false" />
+	<bean class="com.rainbowbus.timer.TradeUnionTimer" lazy-init="false" />
+	
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="stringHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/check/redirect/*.do"/>
+			<mvc:mapping path="/admin/operator/*.do"/>
+			<mvc:mapping path="/admin/invitation/*.do"/>
+			<mvc:mapping path="/admin/vip/*.do"/>
+			<mvc:mapping path="/admin/push/*.do"/>
+			<bean class="com.rainbowbus.interceptor.LoginInterceptor" />		
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/super/redirect/*.do"/>
+			<mvc:mapping path="/super/user/*.do"/>
+			<bean class="com.rainbowbus.interceptor.AdminInterceptor" />		
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/api/*/add$*.do"/>
+			<mvc:mapping path="/api/*/save$*.do"/>
+			<mvc:mapping path="/api/*/update$*.do"/>
+			<mvc:mapping path="/api/*/delete$*.do"/>
+			<mvc:mapping path="/api/*/get$*.do"/>
+			<bean class="com.rainbowbus.interceptor.DMLOPerarorInterceptor" />		
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<bean id="exceptionResolver" class="com.rainbowbus.web.handler.ExceptionHandler" />
+
+	<bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json;charset=utf-8</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+</beans>
