@@ -1,9 +1,9 @@
-package com.rainbowbus.mapper;
+package com.app.dao;
 
 import java.util.List;
 
-import com.rainbowbus.bean.api.CategoryBean;
-import com.rainbowbus.mapper.base.BaseMapper;
+import com.app.entity.CategoryBean;
+
 
 public interface CategoryMapper extends BaseMapper<CategoryBean, Long>{
 	/**

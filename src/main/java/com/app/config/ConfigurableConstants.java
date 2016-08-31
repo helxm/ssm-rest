@@ -1,4 +1,4 @@
-package com.rainbowbus.conf;
+package com.app.config;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,7 +1,5 @@
-package com.rainbowbus.mapper;
+package com.app.dao;
 
-import com.rainbowbus.bean.api.VoteBean;
-import com.rainbowbus.mapper.base.BaseMapper;
 
 public interface VoteMapper extends BaseMapper<VoteBean, Long>{
 
