@@ -3,6 +3,7 @@ package com.app.service.impl;
 import com.app.cache.RedisCache;
 import com.app.dao.UserDao;
 import com.app.entity.User;
+import com.app.service.AbstractService;
 import com.app.service.UserService;
 
 import org.slf4j.Logger;
@@ -10,10 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends AbstractService<User , Serializable> implements UserService {
 
 	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 	@Autowired
@@ -36,6 +38,13 @@ public class UserServiceImpl implements UserService {
 			LOG.info("get cache with key:"+cache_key);
 		}
 		return result_cache;
+	}
+
+
+	@Override
+	public void setBaseMapper() {
+		//super.setBaseMapper(mapper);
+		
 	}
 	
 	

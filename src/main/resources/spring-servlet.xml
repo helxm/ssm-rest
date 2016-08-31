@@ -41,25 +41,12 @@
 
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/check/redirect/*.do"/>
-			<mvc:mapping path="/admin/operator/*.do"/>
-			<mvc:mapping path="/admin/invitation/*.do"/>
-			<mvc:mapping path="/admin/vip/*.do"/>
-			<mvc:mapping path="/admin/push/*.do"/>
-			<bean class="com.rainbowbus.interceptor.LoginInterceptor" />		
-		</mvc:interceptor>
-		<mvc:interceptor>
-			<mvc:mapping path="/super/redirect/*.do"/>
-			<mvc:mapping path="/super/user/*.do"/>
-			<bean class="com.rainbowbus.interceptor.AdminInterceptor" />		
-		</mvc:interceptor>
-		<mvc:interceptor>
 			<mvc:mapping path="/api/*/add$*.do"/>
 			<mvc:mapping path="/api/*/save$*.do"/>
 			<mvc:mapping path="/api/*/update$*.do"/>
 			<mvc:mapping path="/api/*/delete$*.do"/>
 			<mvc:mapping path="/api/*/get$*.do"/>
-			<bean class="com.rainbowbus.interceptor.DMLOPerarorInterceptor" />		
+			<bean class="com.app.filter.DMLOPerarorInterceptor" />		
 		</mvc:interceptor>
 	</mvc:interceptors>
 

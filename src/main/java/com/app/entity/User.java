@@ -2,21 +2,21 @@ package com.app.entity;
 
 import java.util.Date;
 
+import com.app.dto.BaseBean;
+
 
 /**
  * 用户
  * @author  he
  *
  */
-public class User {
+public class User extends BaseBean {
 	
 	private long userId;
 	
 	private String userName;
 	
 	private long userPhone;
-	
-	private Date createTime;
 	
 	private int score;
 
@@ -45,13 +45,6 @@ public class User {
 		this.userPhone = userPhone;
 	}
 
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
 
 	public int getScore() {
 		return score;
@@ -60,13 +53,5 @@ public class User {
 	public void setScore(int score) {
 		this.score = score;
 	}
-
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", userName=" + userName + ", userPhone=" + userPhone + ", createTime=" + createTime + ", score=" + score
-				+ "]";
-	}
-
-	
 
 }

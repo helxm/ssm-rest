@@ -1,4 +1,4 @@
-package com.rainbowbus.service.impl.api;
+package com.app.service;
 
 
 import java.io.Serializable;
@@ -13,12 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import com.rainbowbus.bean.api.UserBean;
-import com.rainbowbus.bean.base.BaseBean;
-import com.rainbowbus.mapper.base.BaseMapper;
-import com.rainbowbus.service.base.AbstractService;
-import com.rainbowbus.validate.IdOnlyGroup;
-import com.rainbowbus.validate.TableOnlyGroup;
+import com.app.dao.BaseMapper;
+import com.app.dto.BaseBean;
+
 
 @Service
 public class BaseServiceImpl<T extends BaseBean> extends AbstractService<T , Serializable> {
@@ -50,7 +47,7 @@ public class BaseServiceImpl<T extends BaseBean> extends AbstractService<T , Ser
 	 * @param bean
 	 * @return
 	 */
-	public BaseBean findById(@Validated(IdOnlyGroup.class) T bean){
+	public BaseBean findById( T bean){
 		Object o = baseMapper.findById(bean);
 		if(o == null){
 			return null;
@@ -100,7 +97,7 @@ public class BaseServiceImpl<T extends BaseBean> extends AbstractService<T , Ser
 	 * @param bean
 	 * @return
 	 */
-	public List<BaseBean> findAllButIsDeleted(@Validated(TableOnlyGroup.class) T bean){
+	public List<BaseBean> findAllButIsDeleted( T bean){
 		List<Map<String, Object>> list = baseMapper.findAllButIsDeleted(bean);
 		if(list == null || list.size() == 0){
 			return null;
@@ -119,7 +116,7 @@ public class BaseServiceImpl<T extends BaseBean> extends AbstractService<T , Ser
 	 * @param bean
 	 * @return
 	 */
-	public BaseBean delById(@Validated(IdOnlyGroup.class) T bean){
+	public BaseBean delById( T bean){
 		return dozer.map(baseMapper.delById(bean), bean.getClass());
 	}
 	/**
@@ -128,7 +125,7 @@ public class BaseServiceImpl<T extends BaseBean> extends AbstractService<T , Ser
 	 * @param bean
 	 * @return
 	 */
-	public BaseBean updateById(@Validated(IdOnlyGroup.class) T bean){
+	public BaseBean updateById( T bean){
 		return dozer.map(baseMapper.updateById(bean), bean.getClass());
 	}
 	/**

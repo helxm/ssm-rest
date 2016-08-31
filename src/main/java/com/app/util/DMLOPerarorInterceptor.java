@@ -1,4 +1,4 @@
-package com.rainbowbus.interceptor;
+package com.app.util;
 
 import java.util.Map;
 
@@ -42,7 +42,7 @@ public class DMLOPerarorInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		//request.setCharacterEncoding("utf-8");//设置获取请求的解码格式，只对post请求有效
+		//request.setCharacterEncoding("utf-8");//设置获取请求的解码格式，post请求有效
 		
 		String uri = request.getServletPath() + "";
 		String pathInfo = request.getPathInfo();

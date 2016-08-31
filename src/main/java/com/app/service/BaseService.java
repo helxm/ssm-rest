@@ -1,4 +1,4 @@
-package com.rainbowbus.service.base;
+package com.app.service;
 
 import java.io.Serializable;
 import java.util.List;
