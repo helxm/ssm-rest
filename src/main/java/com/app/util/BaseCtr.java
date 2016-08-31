@@ -1,4 +1,4 @@
-package com.rainbowbus.controller.base;
+package com.app.util;
 
 import java.beans.PropertyEditorSupport;
 import java.sql.Timestamp;
@@ -9,9 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
@@ -23,15 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.service.BaseServiceImpl;
 import com.github.pagehelper.PageHelper;
-import com.rainbowbus.bean.api.UserBean;
-import com.rainbowbus.bean.base.BaseBean;
-import com.rainbowbus.bean.base.ViewBean;
-import com.rainbowbus.conf.BeanNameConfig;
-import com.rainbowbus.conf.SqlConfig;
-import com.rainbowbus.service.impl.api.BaseServiceImpl;
-import com.rainbowbus.utils.JsonUtils;
-import com.rainbowbus.validate.ValidateUtils;
 
 
 @RestController

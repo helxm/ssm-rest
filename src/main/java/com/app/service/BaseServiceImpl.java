@@ -1,4 +1,4 @@
-package com.rainbowbus.service.impl.api;
+package com.app.service;
 
 
 import java.io.Serializable;
@@ -13,12 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import com.rainbowbus.bean.api.UserBean;
-import com.rainbowbus.bean.base.BaseBean;
-import com.rainbowbus.mapper.base.BaseMapper;
-import com.rainbowbus.service.base.AbstractService;
-import com.rainbowbus.validate.IdOnlyGroup;
-import com.rainbowbus.validate.TableOnlyGroup;
+import com.app.dao.BaseMapper;
+import com.app.dto.BaseBean;
+
 
 @Service
 public class BaseServiceImpl<T extends BaseBean> extends AbstractService<T , Serializable> {

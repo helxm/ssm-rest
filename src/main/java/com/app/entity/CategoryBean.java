@@ -1,11 +1,11 @@
-package com.rainbowbus.bean.api;
+package com.app.entity;
+
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.app.dto.BaseBean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.rainbowbus.bean.base.BaseBean;
-import com.rainbowbus.validate.First;
 
 @JsonIgnoreProperties({"tableName","sql","pageNum","isDelated"})
 @JsonInclude(JsonInclude.Include.NON_EMPTY)//属性为 空（""） 或者为 NULL 都不序列化 

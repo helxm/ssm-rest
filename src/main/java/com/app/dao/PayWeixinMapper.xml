@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.rainbowbus.mapper.PayWeixinMapper">
+    <insert id="insert" parameterType="com.rainbowbus.bean.api.PayWeixinBean" useGeneratedKeys="true" keyColumn="id">
+       insert into <!-- t_cumulation_wall_log -->
+       		t_cumulation_wall_detail_recharge 
+       		(
+	       		total_fee,actionOrderId, orderTime,userid,device_info
+	       		,body,detail,attach
+	       		,out_trade_no,spbill_create_ip,time_start,time_expire
+	       		,goods_tag,trade_type,fee_type
+	       		,return_code,return_msg,result_code,err_code,err_code_des
+	       		,openid,is_subscribe,bank_type,cash_fee_type
+	       		,transaction_id,time_end
+	       		,cash_fee
+	       		,order_status
+	       		,trade_state,trade_state_desc
+       		) 
+       values
+       		(
+       			#{total_fee},#{objId}, #{orderTime},#{userId},#{device_info}
+	       		,#{body},#{detail},#{attach}
+	       		,#{out_trade_no},#{spbill_create_ip},#{time_start},#{time_expire}
+	       		,#{goods_tag},#{trade_type},#{fee_type}
+	       		,#{return_code},#{return_msg},#{result_code},#{err_code},#{err_code_des}
+	       		,#{openid},#{is_subscribe},#{bank_type},#{cash_fee_type}
+	       		,#{transaction_id},#{time_end}
+	       		,#{cash_fee}
+	       		,#{order_status},
+	       		#{trade_state},#{trade_state_desc}
+       		)
+    </insert>
+   
+    <update id="updateByPrimaryKey" parameterType="com.rainbowbus.bean.api.PayWeixinBean">
+       update 
+       		t_cumulation_wall_detail_recharge
+       set 
+       		total_fee=#{total_fee},actionOrderId=#{objId}, orderTime=#{orderTime},userid=#{userId},device_info=#{device_info}
+       		,body=#{body},detail=#{detail},attach=#{attach}
+       		,out_trade_no=#{out_trade_no},spbill_create_ip=#{spbill_create_ip},time_start=#{time_start},time_expire=#{time_expire}
+       		,goods_tag=#{goods_tag},trade_type=#{trade_type},fee_type=#{fee_type}
+       		,return_code=#{return_code},return_msg=#{return_msg},result_code=#{result_code},err_code=#{err_code},err_code_des=#{err_code_des}
+       		,openid=#{openid},is_subscribe=#{is_subscribe},bank_type=#{bank_type},cash_fee_type=#{cash_fee_type}
+       		,transaction_id=#{transaction_id},time_end=#{time_end},cash_fee=#{cash_fee}
+       		,order_status=#{order_status},trade_state=#{trade_state},trade_state_desc=#{trade_state_desc}
+       	where 
+       		id=#{id}
+    </update>
+   
+    <select id="selectByPrimaryKey" parameterType="long" resultType="com.rainbowbus.bean.api.PayWeixinBean">
+       select 
+       	w.*,
+       	w.actionOrderId as objId,
+       	m.userid as userId 
+       from 
+       	t_cumulation_wall_detail_recharge w 
+       where 
+       	w.id=#{id}
+    </select>
+    <select id="findOne" resultType="com.rainbowbus.bean.api.PayWeixinBean">
+       select 
+       	w.*,
+       	w.actionOrderId as objId,
+       	w.userid as userId 
+       from 
+       	t_cumulation_wall_detail_recharge w 
+       where 1=1
+       <if test="id != null">
+       	and 
+       		w.id=#{id}
+       </if>
+       <if test="objId != null and objId != ''">
+       	and 
+       		w.actionOrderId=#{objId}
+       </if>
+       <if test="attach != null and attach != ''">
+       	and 
+       		w.attach=#{attach}
+       </if>
+       <if test="userId != null and userId != ''">
+       	and 
+       		w.userid=#{userId}
+       </if>
+       <if test="out_trade_no != null and out_trade_no != ''">
+       	and 
+       		w.out_trade_no=#{out_trade_no}
+       </if>
+       <if test="prepay_id != null and prepay_id != ''">
+       	and 
+       		w.prepay_id=#{prepay_id}
+       </if>
+       <if test="transaction_id != null and transaction_id != ''">
+       	and 
+       		w.transaction_id=#{transaction_id}
+       </if>
+       	
+    </select>
+   
+    <delete id="deleteByPrimaryKey" parameterType="Long">
+       update #{tableName} set isDelated='0' where id=#{id}
+    </delete>
+    
+    <!-- 删除点赞 -->
+    <delete id="deletePayWeixin" >
+       update #{tableName} set isDelated='0' where id=#{id}
+    </delete>
+    
+    <select id="queryAll" resultType="com.rainbowbus.bean.api.PayWeixinBean" >
+        select * from #{tableName} 
+    </select>
+    
+    <select id="sumMoney" resultType="Integer" >
+        select 
+        	SUM(`money_p` + `money_s` + `money` ) 
+        from 
+        	#{tableName} 
+        where
+        	1=1
+        <if test="userId != null and userId != ''">	
+        	and 
+        		userId = #{userId}
+        </if>
+        <if test="objId != null">	
+        	and 
+        		objId = #{objId}
+        </if>
+    </select>
+    
+    
+    <select id="findPayWeixins" resultType="com.rainbowbus.bean.api.PayWeixinBean" >
+        select * from #{tableName} where 1=1
+        <if test="userId != null">
+        	and
+        		userId =#{userId}
+        </if>
+        <if test="objId != null">
+        	and
+        		objId = #{objId}
+        </if>
+        <if test="objType != null">
+        	and
+        		objType = #{objType}
+        </if>
+        <if test="type != null">
+        	and
+        		type = #{type}
+        </if>
+    </select>
+    
+    <!-- 返回一个list，分页 -->
+    <select id="queryPage" resultType="com.rainbowbus.bean.api.PayWeixinBean" >
+        select * from #{tableName} limit #{0},#{1}
+    </select>
+    
+    <!-- 返回记录数 -->
+    <select id="countAll" resultType="long" >
+        select count(*) from p_vote
+    </select>
+    
+    <!-- 返回记录数 带条件-->
+    <select id="countByCondition" resultType="long" >
+        select count(*) from #{tableName} where 1=1 and userId=#{0}  and (createTime between #{1} and #{2})
+    </select>
+   
+    <!-- 给文章添加赞数-->
+    <update id="addNewsPayWeixinCount" >
+       update #{objTable} set voteCount = #{count} where id = #{objId} 
+    </update>
+   
+   <!-- 统计该文章的所有赞-->
+    <select id="countNewsUserPayWeixin" resultType="Long" >
+       select count(*) from #{tableName} where objId=#{objId} and isDelated='1'
+    </select>
+    
+</mapper>

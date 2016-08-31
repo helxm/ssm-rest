@@ -1,4 +1,4 @@
-package com.rainbowbus.conf;
+package com.app.config;
 /**
  * 
  * @author hesh
@@ -12,7 +12,7 @@ public class ConstantSetConfigurable extends ConfigurableConstants {
 		init("/constantset.properties");
 	}
 	//头像图片存储路径
-	public final static String HEADPIC_IMGURL = SubsidyConfigurable.getProperty("headpic.imgurl", "");
+	public final static String HEADPIC_IMGURL = getProperty("headpic.imgurl", "");
 
 
 }

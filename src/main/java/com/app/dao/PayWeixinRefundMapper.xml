@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.rainbowbus.mapper.PayWeixinRefundMapper">
+    <insert id="insert" parameterType="com.rainbowbus.bean.api.PayWeixinRefundBean" useGeneratedKeys="true"  keyProperty="fileId" keyColumn="id">
+       insert into t_cumulation_wall_detail_refund_wx (
+          id, appid, mch_id, 
+	      out_trade_no, transaction_id, total_fee, 
+	      refund_fee, refund_fee_type, userId, 
+	      out_refund_no, return_code, return_msg, 
+	      result_code, err_code, err_code_des, 
+	      refund_id, refund_channel, cash_fee, 
+	      cash_refund_fee, fee_type, refund_count, 
+	      out_refund_no_$n, refund_id_$n, refund_channel_$n, 
+	      refund_fee_$n, refund_status_$n, refund_recv_accout_$n, 
+	      isDelated, createName, updateName, 
+	      createTime, updateTime
+	    )
+	   values (
+	      #{id,jdbcType=BIGINT}, #{appid,jdbcType=VARCHAR}, #{mch_id,jdbcType=VARCHAR}, 
+	      #{out_trade_no,jdbcType=VARCHAR}, #{transaction_id,jdbcType=VARCHAR}, #{total_fee,jdbcType=INTEGER}, 
+	      #{refund_fee,jdbcType=INTEGER}, #{refund_fee_type,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
+	      #{out_refund_no,jdbcType=VARCHAR}, #{return_code,jdbcType=VARCHAR}, #{return_msg,jdbcType=VARCHAR}, 
+	      #{result_code,jdbcType=VARCHAR}, #{err_code,jdbcType=VARCHAR}, #{err_code_des,jdbcType=VARCHAR}, 
+	      #{refund_id,jdbcType=VARCHAR}, #{refund_channel,jdbcType=VARCHAR}, #{cash_fee,jdbcType=INTEGER}, 
+	      #{cash_refund_fee,jdbcType=INTEGER}, #{fee_type,jdbcType=VARCHAR}, #{refund_count,jdbcType=INTEGER}, 
+	      #{out_refund_no_$n,jdbcType=VARCHAR}, #{refund_id_$n,jdbcType=VARCHAR}, #{refund_channel_$n,jdbcType=VARCHAR}, 
+	      #{refund_fee_$n,jdbcType=INTEGER}, #{refund_status_$n,jdbcType=VARCHAR}, #{refund_recv_accout_$n,jdbcType=VARCHAR}, 
+	      #{isDelated,jdbcType=CHAR}, #{createName,jdbcType=VARCHAR}, #{updateName,jdbcType=VARCHAR}, 
+	      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+	    )
+    </insert>
+   
+    <update id="updateByPrimaryKey" parameterType="com.rainbowbus.bean.api.PayWeixinRefundBean">
+       	update 
+       		t_cumulation_wall_detail_refund_wx
+	    set 
+	      appid = #{appid,jdbcType=VARCHAR},
+	      mch_id = #{mch_id,jdbcType=VARCHAR},
+	      out_trade_no = #{out_trade_no,jdbcType=VARCHAR},
+	      transaction_id = #{transaction_id,jdbcType=VARCHAR},
+	      total_fee = #{total_fee,jdbcType=INTEGER},
+	      refund_fee = #{refund_fee,jdbcType=INTEGER},
+	      refund_fee_type = #{refund_fee_type,jdbcType=VARCHAR},
+	      userId = #{userId,jdbcType=VARCHAR},
+	      out_refund_no = #{out_refund_no,jdbcType=VARCHAR},
+	      return_code = #{return_code,jdbcType=VARCHAR},
+	      return_msg = #{return_msg,jdbcType=VARCHAR},
+	      result_code = #{result_code,jdbcType=VARCHAR},
+	      err_code = #{err_code,jdbcType=VARCHAR},
+	      err_code_des = #{err_code_des,jdbcType=VARCHAR},
+	      refund_id = #{refund_id,jdbcType=VARCHAR},
+	      refund_channel = #{refund_channel,jdbcType=VARCHAR},
+	      cash_fee = #{cash_fee,jdbcType=INTEGER},
+	      cash_refund_fee = #{cash_refund_fee,jdbcType=INTEGER},
+	      fee_type = #{fee_type,jdbcType=VARCHAR},
+	      refund_count = #{refund_count,jdbcType=INTEGER},
+	      out_refund_no_$n = #{out_refund_no_$n,jdbcType=VARCHAR},
+	      refund_id_$n = #{refund_id_$n,jdbcType=VARCHAR},
+	      refund_channel_$n = #{refund_channel_$n,jdbcType=VARCHAR},
+	      refund_fee_$n = #{refund_fee_$n,jdbcType=INTEGER},
+	      refund_status_$n = #{refund_status_$n,jdbcType=VARCHAR},
+	      refund_recv_accout_$n = #{refund_recv_accout_$n,jdbcType=VARCHAR},
+	      isDelated = #{isDelated,jdbcType=CHAR},
+	      createName = #{createName,jdbcType=VARCHAR},
+	      updateName = #{updateName,jdbcType=VARCHAR},
+	      createTime = #{createTime,jdbcType=TIMESTAMP},
+	      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+	    where id = #{id,jdbcType=BIGINT}
+    </update>
+   
+    <select id="selectByPrimaryKey" parameterType="long" resultType="com.rainbowbus.bean.api.PayWeixinRefundBean">
+       select 
+       	w.*
+       from 
+       	t_cumulation_wall_detail_refund_wx w 
+       where 
+       	w.id=#{id}
+    </select>
+    
+    <select id="findOne" resultType="com.rainbowbus.bean.api.PayWeixinRefundBean">
+       select 
+       	w.*
+       from 
+       	t_cumulation_wall_detail_refund_wx w 
+       where 1=1
+       <if test="id != null">
+       	and 
+       		w.id=#{id}
+       </if>
+       <if test="refund_id != null and refund_id != ''">
+       	and 
+       		w.refund_id=#{refund_id}
+       </if>
+       <if test="userId != null and userId != ''">
+       	and 
+       		w.userid=#{userId}
+       </if>
+       <if test="out_trade_no != null and out_trade_no != ''">
+       	and 
+       		w.out_trade_no=#{out_trade_no}
+       </if>
+       <if test="out_refund_no != null and out_refund_no != ''">
+       	and 
+       		w.out_refund_no=#{out_refund_no}
+       </if>
+       <if test="transaction_id != null and transaction_id != ''">
+       	and 
+       		w.transaction_id=#{transaction_id}
+       </if>
+       	
+    </select>
+    
+    <select id="sumMoney" resultType="Integer" >
+        select 
+        	SUM(`money_p` + `money_s` + `money` ) 
+        from 
+        	#{tableName} 
+        where
+        	1=1
+        <if test="userId != null and userId != ''">	
+        	and 
+        		userId = #{userId}
+        </if>
+        <if test="objId != null">	
+        	and 
+        		objId = #{objId}
+        </if>
+    </select>
+    
+    
+    <select id="findPayWeixinRefunds" resultType="com.rainbowbus.bean.api.PayWeixinRefundBean" >
+        select * from #{tableName} where 1=1
+        <if test="userId != null">
+        	and
+        		userId =#{userId}
+        </if>
+        <if test="objId != null">
+        	and
+        		objId = #{objId}
+        </if>
+        <if test="objType != null">
+        	and
+        		objType = #{objType}
+        </if>
+        <if test="type != null">
+        	and
+        		type = #{type}
+        </if>
+    </select>
+    
+    
+</mapper>

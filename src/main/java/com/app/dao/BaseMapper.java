@@ -1,4 +1,4 @@
-package com.rainbowbus.mapper.base;
+package com.app.dao;
 
 import java.io.Serializable;
 import java.util.List;
@@ -6,10 +6,8 @@ import java.util.Map;
 
 import org.springframework.validation.annotation.Validated;
 
-import com.rainbowbus.bean.base.BaseBean;
-import com.rainbowbus.validate.IdOnlyGroup;
-import com.rainbowbus.validate.NameGroup;
-import com.rainbowbus.validate.TableOnlyGroup;
+import com.app.dto.BaseBean;
+
 
 /**
  * 
@@ -49,19 +47,19 @@ public interface BaseMapper<T, ID extends Serializable> {
 	 * @param bean
 	 * @return
 	 */
-	Map findById(@Validated(IdOnlyGroup.class)BaseBean bean);
+	Map findById(BaseBean bean);
 	/**
 	 * 通过Long id删除
 	 * @param bean
 	 * @return
 	 */
-	int delById(@Validated(IdOnlyGroup.class)BaseBean bean);
+	int delById(BaseBean bean);
 	/**
 	 * 通过Long id更新 
 	 * @param bean
 	 * @return
 	 */
-	int updateById(@Validated(IdOnlyGroup.class)BaseBean bean);
+	int updateById(BaseBean bean);
 	/**
 	 * 通过保存
 	 * @param bean
@@ -80,13 +78,13 @@ public interface BaseMapper<T, ID extends Serializable> {
 	 * @param bean
 	 * @return
 	 */
-	List<Map<String, Object>> findAll(@Validated(TableOnlyGroup.class) BaseBean bean);
+	List<Map<String, Object>> findAll( BaseBean bean);
 	/**
 	 * 查询所有，带假删除
 	 * @param bean
 	 * @return
 	 */
-	List<Map<String, Object>> findAllButIsDeleted(@Validated(TableOnlyGroup.class) BaseBean bean);
+	List<Map<String, Object>> findAllButIsDeleted( BaseBean bean);
 	/**
 	 * 查询单个字段，list
 	 * bean需要sql
