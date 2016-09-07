@@ -1,0 +1,150 @@
+﻿/* -- Backgrounds -- */
+.wj-content,
+div[wj-part='cells'] {
+  color: #4b5860;
+  background: #f4f4f4;
+}
+.wj-content .wj-input-group .wj-form-control {
+  color: #4b5860;
+  background: #f4f4f4;
+}
+.wj-listbox-item:not(.wj-state-selected):hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+/* -- Headers -- */
+.wj-header {
+  background: #4b5860;
+  color: #ffffff;
+}
+.wj-flexgrid .wj-group:not(.wj-state-selected):not(.wj-state-multi-selected) {
+  /* Group row background */
+  background: #aaaaaa;
+  color: #444444;
+}
+.wj-flexgrid .wj-marker {
+  background: #f7941d;
+}
+/* -- Grid -- */
+div[wj-part='root'] {
+  background: #e7e7e7;
+}
+.wj-state-selected {
+  background: #f7941d;
+  color: #ffffff;
+}
+.wj-state-multi-selected {
+  background: #b87729;
+  color: #ffffff;
+}
+.wj-input-group .wj-form-control,
+.wj-grid-editor {
+  background: #fff;
+  color: #000000;
+}
+div[wj-part='rhcells'] .wj-header {
+  background: #4b5860;
+}
+.wj-cell {
+  border-right: 0 solid rgba(0, 0, 0, 0.2);
+  border-bottom: 0 solid rgba(0, 0, 0, 0.2);
+}
+[dir="rtl"] .wj-cell {
+  border-left: 0 solid rgba(0, 0, 0, 0.2);
+}
+.wj-cell:not(.wj-header):not(.wj-group):not(.wj-alt):not(.wj-state-selected):not(.wj-state-multi-selected) {
+  /* Default grid cell color */
+  background: #f4f4f4;
+}
+.wj-alt:not(.wj-header):not(.wj-group):not(.wj-state-selected):not(.wj-state-multi-selected) {
+  /* Alternate grid cell color */
+  background: #e7e7e7;
+}
+.wj-frozen.wj-cell:not(.wj-header):not(.wj-group):not(.wj-alt):not(.wj-state-selected):not(.wj-state-multi-selected) {
+  /* Default frozen cell color */
+  background: #e6eef2;
+  color: #4b5860;
+}
+.wj-frozen.wj-alt:not(.wj-header):not(.wj-group):not(.wj-state-selected):not(.wj-state-multi-selected) {
+  /* Alternate frozen cell color */
+  background: #d5e3e9;
+  color: #4b5860;
+}
+.wj-cell.wj-frozen-row {
+  border-bottom-color: #4b5860;
+  border-width: 0;
+}
+.wj-cell.wj-frozen-col {
+  border-right-color: #4b5860;
+  border-width: 0;
+}
+.wj-flexgrid .wj-header.wj-state-multi-selected {
+  /* Selected headers */
+  background: #747474;
+  color: #ffffff;
+  font-weight: bold;
+}
+.wj-flexgrid .wj-colheaders .wj-header.wj-state-multi-selected {
+  /* Selected column headers */
+  border-bottom: 2px solid #f7941d !important;
+}
+.wj-flexgrid .wj-rowheaders .wj-header.wj-state-multi-selected {
+  /* Selected row headers */
+  border-right: 2px solid #f7941d !important;
+}
+.wj-flexgrid .wj-marquee {
+  /* Selection Marquee */
+  position: absolute;
+  box-sizing: border-box;
+  border: 2px solid #f7941d !important;
+}
+.wj-flexsheet .wj-marquee {
+  /* FlexSheet Marquee Border */
+  border: 2px solid #f7941d !important;
+}
+/* -- Buttons -- */
+.wj-content .wj-input-group-btn > .wj-btn,
+.wj-content .wj-btn-group > .wj-btn {
+  background: #4b5860;
+  color: #ffffff;
+}
+.wj-content .wj-input-group-btn > .wj-btn:hover,
+.wj-content .wj-btn-group > .wj-btn:hover {
+  background: #61727d;
+  color: #ffffff;
+}
+.wj-content .wj-input-group-btn > .wj-btn:focus,
+.wj-content .wj-btn-group > .wj-btn:focus {
+  background: #61727d;
+  color: #ffffff;
+}
+.wj-content:not(.wj-dropdown-panel):not(.wj-listbox):not(.wj-flexgrid):not(.wj-calendar-outer) {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.wj-btn-default {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.wj-input-group-btn > .wj-btn {
+  border: 1px;
+}
+/* -- Border Radii -- */
+.wj-content,
+.wj-input-group,
+.wj-btn-group,
+.wj-btn-group-vertical,
+.wj-tooltip,
+.customEdit {
+  border-radius: 4px;
+}
+/* -- Tooltip -- */
+.wj-tooltip {
+  background: #e6eef2;
+  color: #000000;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+/* -- Gauges -- */
+.wj-gauge .wj-pointer path {
+  fill: #f7941d;
+}
+.wj-cell.wj-frozen {
+  border: 0;
+}
