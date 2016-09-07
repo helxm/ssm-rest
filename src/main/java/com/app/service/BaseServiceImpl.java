@@ -47,7 +47,7 @@ public class BaseServiceImpl<T extends BaseBean> extends AbstractService<T , Ser
 	 * @param bean
 	 * @return
 	 */
-	public BaseBean findById(@Validated(IdOnlyGroup.class) T bean){
+	public BaseBean findById( T bean){
 		Object o = baseMapper.findById(bean);
 		if(o == null){
 			return null;
@@ -97,7 +97,7 @@ public class BaseServiceImpl<T extends BaseBean> extends AbstractService<T , Ser
 	 * @param bean
 	 * @return
 	 */
-	public List<BaseBean> findAllButIsDeleted(@Validated(TableOnlyGroup.class) T bean){
+	public List<BaseBean> findAllButIsDeleted( T bean){
 		List<Map<String, Object>> list = baseMapper.findAllButIsDeleted(bean);
 		if(list == null || list.size() == 0){
 			return null;
@@ -116,7 +116,7 @@ public class BaseServiceImpl<T extends BaseBean> extends AbstractService<T , Ser
 	 * @param bean
 	 * @return
 	 */
-	public BaseBean delById(@Validated(IdOnlyGroup.class) T bean){
+	public BaseBean delById( T bean){
 		return dozer.map(baseMapper.delById(bean), bean.getClass());
 	}
 	/**
@@ -125,7 +125,7 @@ public class BaseServiceImpl<T extends BaseBean> extends AbstractService<T , Ser
 	 * @param bean
 	 * @return
 	 */
-	public BaseBean updateById(@Validated(IdOnlyGroup.class) T bean){
+	public BaseBean updateById( T bean){
 		return dozer.map(baseMapper.updateById(bean), bean.getClass());
 	}
 	/**

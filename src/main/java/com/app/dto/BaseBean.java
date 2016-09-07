@@ -17,6 +17,14 @@ public class BaseBean {
 	private String updateName;
 	private Timestamp updateTime;
 	private Character isLive;
+	private String tableName;
+	
+	public String getTableName() {
+		return tableName;
+	}
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
 	public Long getId() {
 		return id;
 	}

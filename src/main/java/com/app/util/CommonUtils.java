@@ -1,4 +1,4 @@
-package com.rainbowbus.utils;
+package com.app.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

@@ -1,4 +1,4 @@
-package com.rainbowbus.conf;
+package com.app.util;
 /**
  * sign校验约定值
  * 枚举配置，方便在拦截器中通过url获取约定值

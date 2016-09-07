@@ -2,10 +2,12 @@ package com.app.dao;
 
 import com.app.entity.News;
 import com.app.entity.NewsExample;
+
+import java.io.Serializable;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface NewsMapper {
+public interface NewsMapper extends BaseMapper<News, Long>{
     int countByExample(NewsExample example);
 
     int deleteByExample(NewsExample example);

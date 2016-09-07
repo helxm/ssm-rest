@@ -16,7 +16,7 @@ import com.app.dao.BaseMapper;
  * @time 2016年3月24日 - 上午10:44:44
  */
 public abstract class AbstractService<T, ID extends Serializable> implements BaseService<T, ID> {
-	protected BaseMapper<T, ID> baseMapper;
+	protected BaseMapper<T, ID> baseMapper ;
 	
 	
 	public void setBaseMapper(BaseMapper<T, ID> baseMapper) {

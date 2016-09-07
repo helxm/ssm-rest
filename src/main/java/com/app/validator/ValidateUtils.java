@@ -1,4 +1,4 @@
-package com.rainbowbus.validate;
+package com.app.validator;
 
 import java.text.DecimalFormat;
 import java.util.Map;
