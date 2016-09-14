@@ -1,4 +1,4 @@
-package com.app.main.jspc;
+package com.app.main.compile;
 
 import org.apache.jasper.JspC;
 /**
@@ -10,13 +10,13 @@ import org.apache.jasper.JspC;
  * @author hesh
  *
  */
-public class TestCompiler{
+public class JspCCompiler{
     public String jspcTest(){  
         String error="";  
         try {  
             JspC jspc = new JspC();  
             //第一种方式
-            String rootPath = TestCompiler.class.getResource(".").getFile().toString(); 
+            String rootPath = JspCCompiler.class.getResource(".").getFile().toString(); 
             String[] arg0 = {"-uriroot", rootPath, "-d", rootPath, 
                     "test.jsp" }; 
             jspc.setArgs(arg0); 
@@ -34,8 +34,8 @@ public class TestCompiler{
         return error;  
     }
     public static void main(String args[]){  
-        TestCompiler t = new TestCompiler(); 
-        String rootPath = TestCompiler.class.getResource(".").getFile().toString();  
+        JspCCompiler t = new JspCCompiler(); 
+        String rootPath = JspCCompiler.class.getResource(".").getFile().toString();  
         System.err.println(rootPath);
         System.out.println(t.jspcTest());  
     }  

@@ -28,5 +28,14 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="E:/work/Program Files/apache-tomcat-8.0.33/bin/tomcat-juli.jar"/>
+	<classpathentry kind="lib" path="E:/work/Program Files/apache-tomcat-8.0.33/lib/jasper.jar"/>
+	<classpathentry kind="lib" path="E:/work/Program Files/apache-tomcat-8.0.33/lib/jsp-api.jar"/>
+	<classpathentry kind="lib" path="E:/work/Program Files/apache-tomcat-8.0.33/lib/tomcat-api.jar"/>
+	<classpathentry kind="lib" path="E:/work/Program Files/apache-tomcat-8.0.33/lib/tomcat-util-scan.jar"/>
+	<classpathentry kind="lib" path="E:/work/Program Files/apache-tomcat-8.0.33/lib/tomcat-util.jar"/>
+	<classpathentry kind="lib" path="E:/work/Program Files/apache-tomcat-8.0.33/lib/el-api.jar"/>
+	<classpathentry kind="lib" path="E:/work/Program Files/apache-tomcat-8.0.33/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="E:/work/Program Files/apache-tomcat-8.0.33/lib/jasper-el.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
