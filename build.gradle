@@ -1,0 +1,36 @@
+apply plugin: 'war'//成功后未在build/libs下生产war包
+  
+sourceCompatibility = 1.8   // 设置 JDK 版本
+webAppDirName = 'WebContent'    // 设置 WebApp 根目录
+
+// 设置 Java 源码所在目录
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
+}
+  
+// 设置 maven 库地址
+repositories { 
+    maven { url 'http://maven.oschina.net/content/groups/public/' }
+}
+
+dependencies {
+	tasks.withType(JavaCompile) {
+		options.encoding = "UTF-8"
+	}
+    compile fileTree(dir: 'WebContent/WEB-INF/lib', include: ['*.jar'])
+    // 没有网络的时候用这个
+    //compileOnly files('E:/work/Program Files/apache-tomcat-8.0.33/lib/servlet-api.jar')
+    
+    compile files("C:/Program Files/Java/jre1.8.0_91/lib/rt.jar",'E:/work/Program Files/apache-tomcat-8.0.33/lib/servlet-api.jar')
+    
+    // 有网络是用maven
+    // providedCompile 'javax.servlet:servlet-api:2.5' // 编译期
+}
+  
