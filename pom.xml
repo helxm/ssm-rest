@@ -351,6 +351,16 @@
 		
 		
 		<!--mybatis 数据访问层 end -->
+		
+		
+		<!--jgit Core Library -->
+	    <dependency>
+	      <groupId>org.eclipse.jgit</groupId>
+	      <artifactId>org.eclipse.jgit</artifactId>
+	      <version>4.5.0.201609210915-r</version>
+	    </dependency>
+		
+		
 	</dependencies>
 	<!-- Build Settings -->
 	<!--http://maven.apache.org/pom.html#Build_Settings -->

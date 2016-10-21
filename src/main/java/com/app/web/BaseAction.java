@@ -27,6 +27,7 @@ import com.cmcc.system.dao.ManagerDao;
 import com.cmcc.system.dto.DAO;
 import com.cmcc.system.util.CodeUtil;
 import com.cmcc.system.util.VOConstants;
+import com.hotpot.ms.dao.util.EntityMethoddesc;
 import com.hotpot.ms.dao.util.Entitydesc;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
@@ -109,11 +110,15 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 	 * 		json
 	 */
 	public String getList() throws Exception{
-		StringBuffer sqlstr = new StringBuffer("select t.* from " + voDbName + " t where 1=1 ");
+		String whereParam = "_w";
+		String orderParam = "_order";
+		String orderTypeParam = "_order_type";
+		
+		StringBuffer sqlstr = new StringBuffer(" select t.* from " + voDbName + " t where 1=1 ");
 		if(hasIsDelProperty){
 			sqlstr.append(" and t.isDelated = '1'");            
 		}
-		@SuppressWarnings("unchecked")
+		
 		Map<String, Object> map = request.getParameterMap();
 		Class<? extends DAO> clzz = vo.getClass();
 		for(String key : map.keySet() ){
@@ -144,18 +149,47 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 				}
 			}
 		}
-		String order = request.getParameter("_order");
+		String _where = request.getParameter(whereParam);
+		if(StringUtils.isNotBlank(_where)){
+			JSONObject whereObject = JSONObject.fromObject(_where);
+			if(whereObject != null){
+				for(Object property : whereObject.keySet()){
+					if(property != null && property.toString() != null){
+						String feildName = property.toString();
+						try {
+							Field field = clzz.getDeclaredField(feildName);
+							EntityMethoddesc descAnno = field.getAnnotation(EntityMethoddesc.class);
+							//字段sql配置实例： @EntityMethoddesc(description = 
+							// "{'wheres': [' and t.type in (0,2) '],'where': ' and t.type in (0,2) '}" )
+							if(descAnno != null){
+								String desc = descAnno.description();
+								if(StringUtils.isNotBlank(desc)){
+									JSONObject config = JSONObject.fromObject(desc);
+									String type = whereObject.getString(feildName);
+									String whereSql = config.getString(type);
+									sqlstr.append(whereSql);
+								}
+							}
+						} catch (Exception e) {
+						}
+					}
+				}
+			}
+		}
+		String order = request.getParameter(orderParam);
 		if(StringUtils.isNotBlank(order)){
 			try {
 				PropertyUtils.getProperty(vo, order);
-				String orderType = request.getParameter("_order_type");
-				if(StringUtils.isBlank(orderType)){
-					orderType = "";
+				String orderType = request.getParameter(orderTypeParam);
+				if("desc".equalsIgnoreCase(orderType)){
+					orderType = "desc";
+				}else{
+					orderType = "asc";
 				}
 				sqlstr.append(" order by t." + order + " " + orderType );
 			} catch (Exception e) {
 				if(e instanceof NoSuchMethodException){
-					System.out.println(e.getMessage());
+					System.out.println(e.getMessage());//vo模型没有order属性
 				}
 			}
 		}
