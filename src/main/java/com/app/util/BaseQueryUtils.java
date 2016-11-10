@@ -5,8 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
+import com.alibaba.fastjson.util.TypeUtils;
+import com.rainbowbus.bean.api.UserBean;
 import com.rainbowbus.bean.base.BaseBean;
+import com.rainbowbus.conf.SqlConfig;
 import com.rainbowbus.service.impl.api.BaseServiceImpl;
 /**
  * 个性化，小量，单列，...，db查询
@@ -15,6 +19,7 @@ import com.rainbowbus.service.impl.api.BaseServiceImpl;
  *
  */
 public class BaseQueryUtils {
+	protected static Logger logger = Logger.getLogger("BaseQueryUtils");
 	
 	private static BaseServiceImpl<BaseBean> service;
 	private static ThreadLocal<List<Map<String, Object>>> valueLocal = new ThreadLocal<>();
@@ -147,12 +152,19 @@ public class BaseQueryUtils {
 	 * @return
 	 */
 	public static Integer getInt(String column,String table,String where){
-		Integer value = null;
 		try {
-			value = Integer.valueOf(getString(column, table, where).split("\\.")[0]);
+			String strt = getString(column, table, where);
+			if(StringUtils.isNotBlank(strt)){
+				if(strt.indexOf('.') != -1){
+					return TypeUtils.castToInt(strt.split("\\.")[0]);
+				}else{
+					return TypeUtils.castToInt(strt);
+				}
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return value ;
+		return null ;
 	}
 	/**
 	 * 获取单个字段 Long值
@@ -163,12 +175,19 @@ public class BaseQueryUtils {
 	 * @return
 	 */
 	public static Long getLong(String column,String table,String where){
-		Long value = null;
 		try {
-			value = Long.valueOf(getString(column, table, where).split("\\.")[0]);
+			String strt = getString(column, table, where);
+			if(StringUtils.isNotBlank(strt)){
+				if(strt.indexOf('.') != -1){
+					return TypeUtils.castToLong(strt.split("\\.")[0]);
+				}else{
+					return TypeUtils.castToLong(strt);
+				}
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return value;
+		return null ;
 	}
 	/**
 	 * 获取单个字段 Character值
@@ -198,8 +217,63 @@ public class BaseQueryUtils {
 		service = (BaseServiceImpl<BaseBean>) SpringInit.getBean("baseServiceImpl");
     	BaseBean bean = new BaseBean();
     	bean.setSql(sql);
+    	System.err.println(sql);
+    	logger.info(sql);
 		return service.updateBase(bean);
 	}
+	/**
+	 * 保存
+	 * 
+	 * @param map
+	 * @param bean
+	 * @param user
+	 * @return
+	 * @throws Exception
+	 */
+	public static int save(Map map,BaseBean bean,UserBean user) throws Exception{
+		Long id = TypeUtils.castToLong(map.get("id"));
+		String sql = null;
+		if(id != null){
+			sql = SqlConfig.INSTANCE.getUpdateSql(null, map, bean);
+		}else{
+			sql = SqlConfig.INSTANCE.getInsertSql(null, map, bean, user);
+		}
+		bean.setSql(sql);
+		System.err.println(sql);
+		logger.info(sql);
+		
+		service = (BaseServiceImpl<BaseBean>) SpringInit.getBean("baseServiceImpl");
+		return service.updateBase(bean);
+	}
+	/**
+	 * 保存，根据map中存储的键值对做插入或更新
+	 * 
+	 * @param configSqlKey
+	 * 		配置文件中，插入语句where条件配置的key
+	 * @param map
+	 * @param tableName
+	 * @param userMark
+	 * 		用户编号标识
+	 * @return
+	 */
+	public static Long saveByMap(String configSqlKey,Map<String,Object> map, String tableName) {
+		Long id = TypeUtils.castToLong(map.get("id"));
+		String sql = null;
+		if(id != null){
+			sql = SqlConfig.INSTANCE.getUpdateSql(configSqlKey, map, map, tableName, null);
+		}else{
+			sql = SqlConfig.INSTANCE.getInsertSql(map, map, null, tableName);
+		}
+		BaseBean bean = new BaseBean();
+		bean .setSql(sql);
+		System.err.println(sql);
+		logger.info(sql);
+		
+		service = (BaseServiceImpl<BaseBean>) SpringInit.getBean("baseServiceImpl");
+		service.updateBase(bean);
+		return bean.getId();
+	}
+	
 	public static void main(String[] args) {
 		//System.err.println((Long) (Object)"gfds" );//java.lang.String cannot be cast to java.lang.Long
 		System.err.println(Integer.valueOf("15".split("\\.")[0]));
