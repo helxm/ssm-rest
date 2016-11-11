@@ -96,6 +96,7 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 	/*********************************he 常用公共接口方法************************************/
 	public String page(){
 		request.setAttribute("model", vo.getClass().getSimpleName());
+		request.setAttribute("userVo", getUser());
 		return SUCCESS;
 	}
 	
@@ -111,10 +112,29 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 	 */
 	public String getList() throws Exception{
 		String whereParam = "_w";
+		String leftJoinParam = "_lj";
+		String leftJoinAndParam = "_lja";
+		String fieldsParam = "_f";
 		String orderParam = "_order";
 		String orderTypeParam = "_order_type";
 		
-		StringBuffer sqlstr = new StringBuffer(" select t.* from " + voDbName + " t where 1=1 ");
+		StringBuffer sqlstr = new StringBuffer(" select   " );
+		if( StringUtils.isNotBlank(request.getParameter("_f"))){
+			getSqlFromBeanByParam(fieldsParam, sqlstr);
+		}else{
+			sqlstr.append(" t.* ");
+		}
+		
+		sqlstr.append(" from ");
+		sqlstr.append(voDbName + " t ");
+		getSqlFromBeanByParam(leftJoinParam, sqlstr);
+		
+		String _lja = request.getParameter(leftJoinAndParam);
+		if(StringUtils.isNotBlank(_lja)){
+			sqlstr.append(" and t." + _lja);
+		}
+		
+		sqlstr.append(" where 1=1 ");
 		if(hasIsDelProperty){
 			sqlstr.append(" and t.isDelated = '1'");            
 		}
@@ -149,33 +169,9 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 				}
 			}
 		}
-		String _where = request.getParameter(whereParam);
-		if(StringUtils.isNotBlank(_where)){
-			JSONObject whereObject = JSONObject.fromObject(_where);
-			if(whereObject != null){
-				for(Object property : whereObject.keySet()){
-					if(property != null && property.toString() != null){
-						String feildName = property.toString();
-						try {
-							Field field = clzz.getDeclaredField(feildName);
-							EntityMethoddesc descAnno = field.getAnnotation(EntityMethoddesc.class);
-							//字段sql配置实例： @EntityMethoddesc(description = 
-							// "{'wheres': [' and t.type in (0,2) '],'where': ' and t.type in (0,2) '}" )
-							if(descAnno != null){
-								String desc = descAnno.description();
-								if(StringUtils.isNotBlank(desc)){
-									JSONObject config = JSONObject.fromObject(desc);
-									String type = whereObject.getString(feildName);
-									String whereSql = config.getString(type);
-									sqlstr.append(whereSql);
-								}
-							}
-						} catch (Exception e) {
-						}
-					}
-				}
-			}
-		}
+		
+		getSqlFromBeanByParam(whereParam, sqlstr);
+		
 		String order = request.getParameter(orderParam);
 		if(StringUtils.isNotBlank(order)){
 			try {
@@ -194,6 +190,36 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 			}
 		}
 		return responseJosn(voDao.search_ReturnJsonString(sqlstr.toString(), getRows(),getPage()));
+	}
+
+	private void getSqlFromBeanByParam(String paramName, StringBuffer sqlstr) {
+		Class<? extends DAO> clzz = vo.getClass();
+		String _where = request.getParameter(paramName);
+		if(StringUtils.isNotBlank(_where)){
+			JSONObject paramObject = JSONObject.fromObject(_where);
+			if(paramObject != null){
+				for(Object feild : paramObject.keySet()){
+					if(feild != null && feild.toString() != null){
+						String feildName = feild.toString();
+						try {
+							Field field = clzz.getDeclaredField(feildName);
+							EntityMethoddesc descAnno = field.getAnnotation(EntityMethoddesc.class);
+							if(descAnno != null){
+								String desc = descAnno.description();
+								if(StringUtils.isNotBlank(desc)){
+									JSONObject config = JSONObject.fromObject(desc);
+									String configKey = paramObject.getString(feildName);
+									String configValue = config.getString(configKey);
+									sqlstr.append(configValue);
+								}
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	/**
