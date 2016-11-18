@@ -13,13 +13,30 @@
     <!--1、配置数据库相关参数-->
     <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
 
-    <!--2.数据源druid -->
-	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" 
+    <!--2. mysql - 数据源druid -->
+	<bean id="dataSource_mysql" class="com.alibaba.druid.pool.DruidDataSource" 
 			init-method="init" destroy-method="close">
-		<property name="driverClassName" value="${jdbc.driverClassName}" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.username}" />
-		<property name="password" value="${jdbc.password}" />
+		<property name="driverClassName" value="${mysql.jdbc.driverClassName}" />
+		<property name="url" value="${mysql.jdbc.url}" />
+		<property name="username" value="${mysql.jdbc.username}" />
+		<property name="password" value="${mysql.jdbc.password}" />
+		
+		 <!-- 配置初始化大小、最小、最大 -->  
+	    <property name="initialSize" value="${druid.pool.size.init}" />  
+	    <property name="minIdle" value="${druid.pool.size.min}" />   
+	    <property name="maxActive" value="${druid.pool.size.max}" />  
+	    
+	    <!-- 配置监控统计拦截的filters，wall用于防止sql注入，stat用于统计分析 -->
+	    <property name="filters" value="wall,stat" /> 
+	</bean>
+	
+    <!--2. h2 - 数据源druid -->
+	<bean id="dataSource_h2" class="com.alibaba.druid.pool.DruidDataSource" 
+			init-method="init" destroy-method="close">
+		<property name="driverClassName" value="${h2.jdbc.driverClassName}" />
+		<property name="url" value="${h2.jdbc.url}" />
+		<property name="username" value="${h2.jdbc.username}" />
+		<property name="password" value="${h2.jdbc.password}" />
 		
 		 <!-- 配置初始化大小、最小、最大 -->  
 	    <property name="initialSize" value="${druid.pool.size.init}" />  
@@ -30,6 +47,17 @@
 	    <property name="filters" value="wall,stat" /> 
 	</bean>
     
+    <bean id="dataSource" class="com.app.db.DynamicDataSource">  
+        <property name="targetDataSources">    
+            <map key-type="java.lang.String">    
+                <!-- product -->  
+               <entry key="mysql" value-ref="dataSource_mysql"/>    
+               <!-- test -->  
+               <entry key="h2" value-ref="dataSource_h2"/>    
+            </map>    
+        </property>    
+        <property name="defaultTargetDataSource" ref="dataSource_h2"/>    
+    </bean>  
 
     <!--3、配置SqlSessionFactory对象-->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

@@ -96,6 +96,22 @@
     <version>3.8.0</version>
 </dependency>
 
+<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+<dependency>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <version>1.4.193</version>
+    <!-- 表示开发的时候引入，发布的时候不会加载此包 -->
+	<scope>test</scope>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.aspectj/aspectjrt -->
+<dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjrt</artifactId>
+    <version>1.8.9</version>
+</dependency>
+
 		
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
