@@ -9,7 +9,7 @@ import java.util.SortedMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.jdom.JDOMException;
+import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;

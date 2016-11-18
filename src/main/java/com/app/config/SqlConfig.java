@@ -16,9 +16,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
 
 import com.alibaba.fastjson.util.TypeUtils;
-import com.rainbowbus.bean.api.UserBean;
-import com.rainbowbus.bean.base.BaseBean;
-import com.rainbowbus.utils.api.ReflectUtils;
+import com.app.dto.BaseBean;
+import com.app.entity.UserBean;
+import com.app.util.ReflectUtils;
 
 /**
  * 
@@ -190,7 +190,7 @@ public enum SqlConfig {
 		StringBuffer sql = new StringBuffer();
 		sql.append("UPDATE " + tableName + " SET ");
 		for(String k : map.keySet()){
-			if(ignoreFields.contains(k)
+			if(ignoreFields != null && ignoreFields.contains(k)
 					||"id".equals(k)//根据id更新，不要更新id字段
 					){
 				continue;

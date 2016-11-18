@@ -37,5 +37,6 @@
 	<classpathentry kind="lib" path="E:/work/Program Files/apache-tomcat-8.0.33/lib/el-api.jar"/>
 	<classpathentry kind="lib" path="E:/work/Program Files/apache-tomcat-8.0.33/lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="E:/work/Program Files/apache-tomcat-8.0.33/lib/jasper-el.jar"/>
+	<classpathentry kind="lib" path="lib/json-lib-2.4-jdk15.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

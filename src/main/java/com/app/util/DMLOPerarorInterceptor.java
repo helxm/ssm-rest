@@ -12,18 +12,9 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.rainbowbus.bean.UserAdminBean;
-import com.rainbowbus.bean.api.UserBean;
-import com.rainbowbus.conf.ConstantSetConfigurable;
-import com.rainbowbus.conf.SignPromiseValue;
-import com.rainbowbus.controller.base.BaseCtr;
-import com.rainbowbus.service.UserService;
-import com.rainbowbus.service.impl.api.TradeUnionService;
-import com.rainbowbus.service.impl.api.UserServiceImpl;
-import com.rainbowbus.utils.CommonUtils;
-import com.rainbowbus.utils.CookieUtils;
-import com.rainbowbus.utils.EncodingUtils;
-import com.rainbowbus.utils.JsonUtils;
+import com.app.entity.UserBean;
+import com.app.service.impl.UserServiceImpl;
+
 
 public class DMLOPerarorInterceptor implements HandlerInterceptor {
 	@Autowired

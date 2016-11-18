@@ -1,4 +1,4 @@
-package com.rainbowbus.utils;
+package com.app.util;
 
 import java.lang.reflect.Field;
 import java.util.Collection;

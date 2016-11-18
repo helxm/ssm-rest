@@ -28,17 +28,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.app.config.BeanNameConfig;
+import com.app.config.ConstantSetConfigurable;
+import com.app.config.SqlConfig;
+import com.app.dto.BaseBean;
+import com.app.dto.ViewBean;
+import com.app.entity.UserBean;
+import com.app.service.BaseServiceImpl;
+import com.app.util.JsonUtils;
+import com.app.validator.ValidateUtils;
 import com.github.pagehelper.PageHelper;
-import com.rainbowbus.bean.api.UserBean;
-import com.rainbowbus.bean.base.BaseBean;
-import com.rainbowbus.bean.base.ViewBean;
-import com.rainbowbus.conf.BeanNameConfig;
-import com.rainbowbus.conf.ConstantSetConfigurable;
-import com.rainbowbus.conf.SqlConfig;
-import com.rainbowbus.service.impl.api.BaseServiceImpl;
-import com.rainbowbus.utils.JsonUtils;
-import com.rainbowbus.utils.api.Yu_SmallFunctionUtil;
-import com.rainbowbus.validate.ValidateUtils;
 
 
 @RestController

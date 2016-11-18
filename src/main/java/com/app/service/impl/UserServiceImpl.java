@@ -3,6 +3,7 @@ package com.app.service.impl;
 import com.app.cache.RedisCache;
 import com.app.dao.UserDao;
 import com.app.entity.User;
+import com.app.entity.UserBean;
 import com.app.service.AbstractService;
 import com.app.service.UserService;
 
@@ -45,6 +46,12 @@ public class UserServiceImpl extends AbstractService<User , Serializable> implem
 	public void setBaseMapper() {
 		//super.setBaseMapper(mapper);
 		
+	}
+
+
+	public UserBean selectByUserId(String userId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

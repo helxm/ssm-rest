@@ -9,11 +9,9 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.rainbowbus.bean.api.UserBean;
-import com.rainbowbus.bean.api.UserCategoryBean;
-import com.rainbowbus.service.impl.api.UserCategoryServiceImpl;
-import com.rainbowbus.service.impl.api.UserServiceImpl;
-import com.rainbowbus.utils.JsonUtils;
+import com.app.entity.UserBean;
+import com.app.service.impl.UserServiceImpl;
+
 
 public class UserServiceTest {
 	private UserServiceImpl service;

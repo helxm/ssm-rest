@@ -1,4 +1,4 @@
-package com.rainbowbus.validate;
+package com.app.validator;
 
 
 import java.util.regex.Pattern;
@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.rainbowbus.utils.api.EmojiFilterUtils;
+import com.app.util.EmojiFilterUtils;
 
 public class EmoticonValidator implements ConstraintValidator<Emoticon, String> {
 	private String moneyReg = "^[\ud800\udc00-\udbff\udfff\ud800-\udfff]$";//表示表情符号的正则表达式  

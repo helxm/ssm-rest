@@ -18,8 +18,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.rainbowbus.conf.SignPromiseValue;
-import com.rainbowbus.utils.MD5Util;
+import com.app.util.MD5Util;
+import com.app.util.SignPromiseValue;
 
 /**
  * 

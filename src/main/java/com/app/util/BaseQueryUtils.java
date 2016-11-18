@@ -8,10 +8,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.util.TypeUtils;
-import com.rainbowbus.bean.api.UserBean;
-import com.rainbowbus.bean.base.BaseBean;
-import com.rainbowbus.conf.SqlConfig;
-import com.rainbowbus.service.impl.api.BaseServiceImpl;
+import com.app.config.SqlConfig;
+import com.app.dto.BaseBean;
+import com.app.entity.UserBean;
+import com.app.service.BaseServiceImpl;
 /**
  * 个性化，小量，单列，...，db查询
  * 

@@ -1,4 +1,4 @@
-package com.rainbowbus.filter;
+package com.app.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.rainbowbus.utils.EncodingUtils;
 /**
  * 解码前台中文URLEcode
  * 

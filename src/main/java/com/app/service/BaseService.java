@@ -30,6 +30,14 @@ public interface BaseService<T, ID extends Serializable> {
 	long countAll();
 
 	long countByCondition(String condition);
+
+	T find(T record);
+
+	List<T> queryAll(T record);
+
+	long countAll(T record);
+
+	ID saveOrUpdate(T record);
 	
 	
 

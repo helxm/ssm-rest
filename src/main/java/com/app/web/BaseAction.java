@@ -1,4 +1,4 @@
-package com.app.web;
+/*package com.app.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -19,14 +19,8 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
-import com.cmcc.census.util.CensusUtil;
-import com.cmcc.census.util.FileUpAndLoad2;
-import com.cmcc.census.util.ReadProperties;
-import com.cmcc.system.actions.login.Adminlogin;
-import com.cmcc.system.dao.ManagerDao;
-import com.cmcc.system.dto.DAO;
-import com.cmcc.system.util.CodeUtil;
-import com.cmcc.system.util.VOConstants;
+import com.app.util.CensusUtil;
+import com.app.util.CodeUtil;
 import com.hotpot.ms.dao.util.EntityMethoddesc;
 import com.hotpot.ms.dao.util.Entitydesc;
 import com.opensymphony.xwork2.ActionSupport;
@@ -47,7 +41,7 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 	private Integer rows;//每页显示的记录数   
 	private Integer page;//当前第几页  
 	
-	protected DAO vo;
+	protected Object vo;
 	protected ManagerDao<?> voDao;
 	protected String voDbName;
 	protected String voIdName;
@@ -56,9 +50,9 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 	protected String ids;
 	protected boolean hasIsDelProperty = true;//假删除字段，0-删除，1-非删除
 	
-	/**
+	*//**
 	 * 图片上传
-	 */
+	 *//*
 	public File upload_one_file;
 	public String upload_one_fileFileName;
 	
@@ -67,12 +61,12 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 		return vo;
 	}
 	
-	/**
+	*//**
 	 * 确定操作对象
 	 * @param vo
 	 * @throws SecurityException 
 	 * @throws NoSuchFieldException 
-	 */
+	 *//*
 	public void setVo(DAO vo,ManagerDao<?> voDao) {
 		Class<? extends Object> clzz = vo.getClass();
 		boolean hasAnnotation = clzz.isAnnotationPresent(Entitydesc.class);
@@ -93,14 +87,14 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 	}
 	
 	
-	/*********************************he 常用公共接口方法************************************/
+	*//*********************************he 常用公共接口方法************************************//*
 	public String page(){
 		request.setAttribute("model", vo.getClass().getSimpleName());
 		request.setAttribute("userVo", getUser());
 		return SUCCESS;
 	}
 	
-	/**
+	*//**
 	 * 公共列表方法
 	 * 		默认排序
 	 * 默认条件
@@ -109,7 +103,7 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 	 * 		name
 	 * @return
 	 * 		json
-	 */
+	 *//*
 	public String getList() throws Exception{
 		String whereParam = "_w";
 		String leftJoinParam = "_lj";
@@ -222,12 +216,12 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 		}
 	}
 	
-	/**
+	*//**
 	 * 查找
 	 *
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	public String toUpdate() throws Exception{
 		boolean flag = false;
 		try {
@@ -242,9 +236,9 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 		}
 	}
 	
-	/**
+	*//**
 	 * 保存或者修改排行榜记录
-	 */
+	 *//*
 	public String saveOrUpdate() throws Exception {
 		boolean flag = true;
 		try {
@@ -263,9 +257,9 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 			return respError();
 		}
 	}
-	/**
+	*//**
 	 * 删除
-	 */
+	 *//*
 	public String deletes() throws Exception {
 		boolean flag = true;
 		try {
@@ -281,24 +275,24 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 		}
 	}
 	
-	/**
+	*//**
 	 * 获取当前用户信息
 	 * 	其中corporationid=158，corporationname=机构列表，表示超级管理员
 	 * @return
-	 */
+	 *//*
 	protected Adminlogin getUser() {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		Adminlogin adminlogin = (Adminlogin) session.getAttribute("admin");
 		return adminlogin;
 	}
 	
-	/*********************************he 公共返回格式处理************************************/
+	*//*********************************he 公共返回格式处理************************************//*
 	
-	/**
+	*//**
 	 * 返回json，公共逻辑
 	 * @return
 	 * @throws Exception 
-	 */
+	 *//*
 	protected String respSucess(boolean flag,Object data) throws Exception{
 		JSONObject obj = new JSONObject();
 		if (flag) {
@@ -311,11 +305,11 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 		}
 		return responseJosn(obj.toString());
 	}
-	/**
+	*//**
 	 * 返回报错
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	protected String respError() throws Exception {
 		JSONObject obj = new JSONObject();
 		obj.put(CensusUtil.CODE, CensusUtil.CODE_EXCEPTION);
@@ -327,11 +321,11 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 	
 	
 	
-	/********************************* 图片上传 ************************************/
+	*//********************************* 图片上传 ************************************//*
 	
-	/**
+	*//**
 	 * 上传图片
-	 */
+	 *//*
 	public String uploadImg() throws Exception {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		// 上传图片的类型
@@ -362,11 +356,11 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 				}
 
 				// 检查像素
-				/*
+				
 				 * if (upload_one_file.length() > 200 * 1024) { ResizeImage r1 =
 				 * new ResizeImage(1024); r1.writeHighQuality(r1.zoomImage(bi),
 				 * upload_one_file); } bi = ImageIO.read(upload_one_file);
-				 */
+				 
 
 				FileUpAndLoad2 fileUpAndLoad = new FileUpAndLoad2();
 				System.out.println("图片上传真实路径===" + "basePath===" + basePath
@@ -387,7 +381,7 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 	
 	
 	
-	/*********************************he 分割线  尾************************************/
+	*//*********************************he 分割线  尾************************************//*
 	
 	
 	
@@ -396,13 +390,13 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 		return 8;
 	}
 	
-	/**
+	*//**
 	 * 检查像素(低于某像素)
 	 * @param fileup
 	 * @param size
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	public Boolean checkImgPixel(BufferedImage bi,String width,String height) throws Exception{
 		int wid = bi.getWidth(); // 像素  
 	    int heig = bi.getHeight(); // 像素  
@@ -414,13 +408,13 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 			return wid>img_width || heig>img_height ;
 		}
 	}
-	/**
+	*//**
 	 * 检查像素(等于某像素)
 	 * @param fileup
 	 * @param size
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	public Boolean checkImgPixelFinal(BufferedImage bi,String width,String height) throws Exception{
 		int wid = bi.getWidth(); // 像素  
 	    int heig = bi.getHeight(); // 像素  
@@ -432,13 +426,13 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 		return wid==img_width && heig==img_height ;
 	}
 	
-	/**
+	*//**
 	 * 检查图片大小
 	 * @param fileup
 	 * @param size
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	public boolean checkImgSize(File fileup,String size) throws Exception{
 		Integer img_size = Integer.valueOf(size);
 		long length = fileup.length();
@@ -447,11 +441,11 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 	
 //============用户相关Start=============================
 	
-	/**
+	*//**
 	 * 获取登录人id
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	public Integer getAdminId() throws Exception{
 		Adminlogin oldAdm=(Adminlogin)getSession("admin");
 		if (oldAdm == null) {
@@ -460,11 +454,11 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 		return oldAdm.getAdminid();
 	}
 	
-	/**
+	*//**
 	 * 获取登录人姓名
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	public String getAdminName() throws Exception{
 		Adminlogin oldAdm=(Adminlogin)getSession("admin");
 		if (oldAdm == null) {
@@ -473,11 +467,11 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 		return oldAdm.getName();
 	}
 	
-	/**
+	*//**
 	 * 获取admin
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	public Adminlogin getAdmin() throws Exception{
 		Adminlogin oldAdm=(Adminlogin)getSession("admin");
 		return oldAdm;
@@ -485,23 +479,23 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 
 //============用户相关End=============================
 	
-	/**
+	*//**
 	 * 获取pluginName
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	public String getPluginType() throws Exception{
 		String pluginType = (String) getSession(VOConstants.PLUGINTYPE);
 		return pluginType;
 	}
 	
 	
-	/**
+	*//**
 	 * 返回json字符串
 	 * @param json
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	public  String responseJosn(String json) throws Exception{
 		HttpServletResponse response = ServletActionContext.getResponse();
 		response.setContentType("text/html;charset=UTF-8");
@@ -509,30 +503,30 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 		return null;
 	}
 	
-	/**
+	*//**
 	 * 向session中存放值
 	 * @param jsonStr
 	 * @param obj
-	 */
+	 *//*
 	public void setSession(String jsonStr,Object obj){
 		ServletActionContext.getContext().getSession().put(jsonStr,  obj);
 	}
 	
-	/**
+	*//**
 	 * 获取session中的值
 	 * @param sessionStr
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	public Object getSession(String sessionStr) throws Exception{
 		//ServletActionContext.getRequest().getSession().getAttribute(arg0) 
 		
 		 return  ServletActionContext.getRequest().getSession().getAttribute(sessionStr) ;
 	}
 
-	/*public Adminlogin getAdminlogin() throws Exception{
+	public Adminlogin getAdminlogin() throws Exception{
 		return (Adminlogin)getSession("admin");
-	}*/
+	}
 
 	
 	public Integer getRows() {
@@ -590,3 +584,4 @@ public class BaseAction extends ActionSupport implements ModelDriven<Object>,Ser
 	
 	
 }
+*/

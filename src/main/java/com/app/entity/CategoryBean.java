@@ -4,6 +4,7 @@ package com.app.entity;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.app.dto.BaseBean;
+import com.app.validator.First;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 

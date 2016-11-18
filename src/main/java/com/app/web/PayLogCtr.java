@@ -1,20 +1,17 @@
 package com.app.web;
 
-
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.jdom.JDOMException;
+import org.jdom2.JDOMException;
 import org.json.JSONException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,30 +25,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.app.dto.ViewBean;
+import com.app.entity.PayLogBean;
+import com.app.entity.PayWeixinBean;
+import com.app.service.BaseServiceImpl;
+import com.app.service.impl.PayWeixinServiceImpl;
+import com.app.util.JsonUtils;
+import com.app.util.SmallFunctionUtil_Used;
+import com.app.util.SmallFunctionUtil;
+import com.app.util.weixin.ConfigUtil;
+import com.app.util.weixin.MapUtils;
+import com.app.util.weixin.PayCommonUtil;
+import com.app.util.weixin.WeixinConstant;
+import com.app.validator.NameGroup;
+import com.app.validator.TableAndObjGroup;
+import com.app.validator.TableGroup;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.JsonObject;
-import com.rainbowbus.bean.api.PayLogBean;
-import com.rainbowbus.bean.api.PayWeixinBean;
-import com.rainbowbus.bean.api.PayWeixinRefundBean;
-import com.rainbowbus.bean.api.UserTokenBean;
-import com.rainbowbus.bean.base.ViewBean;
-import com.rainbowbus.controller.base.BaseCtr;
-import com.rainbowbus.service.impl.api.MatchBetLineServiceImpl;
-import com.rainbowbus.service.impl.api.PayLogServiceImpl;
-import com.rainbowbus.service.impl.api.PayWeixinServiceImpl;
-import com.rainbowbus.service.impl.api.UserTokenServiceImpl;
-import com.rainbowbus.utils.JsonUtils;
-import com.rainbowbus.utils.UserAgentUtil;
-import com.rainbowbus.utils.api.IxinTuiSong;
-import com.rainbowbus.utils.api.Yu_SmallFunctionUtil;
-import com.rainbowbus.utils.api.Yu_SmallFunctionUtil_Used;
-import com.rainbowbus.utils.weixin.ConfigUtil;
-import com.rainbowbus.utils.weixin.MapUtils;
-import com.rainbowbus.utils.weixin.PayCommonUtil;
-import com.rainbowbus.utils.weixin.WeixinConstant;
-import com.rainbowbus.validate.NameGroup;
-import com.rainbowbus.validate.TableGroup;
 
 /**
  * 
@@ -66,18 +56,13 @@ import com.rainbowbus.validate.TableGroup;
 public class PayLogCtr extends BaseCtr {
 	private static Logger logger = Logger.getLogger(PayLogCtr.class);  
 	@Autowired
-	private PayLogServiceImpl service;
+	private BaseServiceImpl service;
 	@Autowired
 	private PayWeixinServiceImpl payWeixinServiceImpl;
-	@Autowired
-	private MatchBetLineServiceImpl matchBetLineServiceImpl;
-	@Autowired
-	private UserTokenServiceImpl userTokenServiceImpl;
 
 	@RequestMapping(value = "/{id}")
 	public ViewBean view(@PathVariable("id") Long id) throws JSONException {
-		PayLogBean feedback = service.selectByPrimaryKey(id);
-		return JsonUtils.getSuccess("获取成功", feedback);
+		return JsonUtils.getSuccess("获取成功", null);
 	}
 	/**
 	 * 回调接口
@@ -121,36 +106,18 @@ public class PayLogCtr extends BaseCtr {
 			return JsonUtils.getError(errors);
 		}
 		
-		String ip = Yu_SmallFunctionUtil_Used.getIpAddr(request);
+		String ip = SmallFunctionUtil_Used.getIpAddr(request);
 		record.setIp(ip);
 		Long objId ;
 		Character payWay = record.getPayWay();
 		if(payWay == null || payWay == '0'){//积分支付
 			Assert.hasLength(record.getToken(), "设备唯一号不能为空");
 			record.setActionStatus("积分操作成功");
-			if(service.save(record,false) > 0){
+			/*if(service.save(record,false) > 0){
 				logger.info("保存用户交易记录，操作人id： " + record.getUserId());
 				objId = record.getObjId();
-				if("pl-bet".equals(record.getOriginalTableName())){//用户下注，把该用户添加该赛事的到爱心推推送范围中
-					String reStr = IxinTuiSong.addMatchDevice(UserAgentUtil.getClientType(request), record.getToken().replaceAll(" ", ""), new String[]{"match-bet" + objId} );
-					org.json.JSONObject jsonObject = new org.json.JSONObject(reStr);
-					Object res = jsonObject.get("result");
-					Object desc = jsonObject.get("desc");
-					logger.info("赛事下注，用户token: " + record.getToken());
-					logger.info("把下注用户添加到该赛事下注分配通知组： match-bet" + objId + "，添加结果： " + res + "-" + desc);
-					
-					matchBetLineServiceImpl.save(objId, record.getUserId(), record.getToken().replaceAll(" ", ""), record.getMoney_p(),record.getType());
-					logger.info("赛事下注，保存下注实时赔率计算基础信息 ，比赛编号：" + objId);
-					
-					UserTokenBean tokenBean = new UserTokenBean();
-					tokenBean.setUserId(record.getUserId());
-					tokenBean.setToken(record.getToken());
-					tokenBean.setType((UserAgentUtil.getClientType(request) + "").charAt(0));
-					userTokenServiceImpl.saveOrUpdate(tokenBean);
-					logger.info("赛事下注，记录用户token：" + record.getToken());
-				}
 				return JsonUtils.getSuccess("交易成功");
-			}
+			}*/
 		}else{
 			PayWeixinBean payWeixinBean = new PayWeixinBean();
 			try {
@@ -166,7 +133,7 @@ public class PayLogCtr extends BaseCtr {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 			Date d_now = new Date();
 			String now = sdf.format(d_now);
-			payWeixinBean.setOut_trade_no(("WX"+ now + Yu_SmallFunctionUtil.getSysJournalNo(14, false)).toUpperCase());
+			payWeixinBean.setOut_trade_no(("WX"+ now + SmallFunctionUtil.getSysJournalNo(14, false)).toUpperCase());
 			
 			payWeixinBean.setFee_type("CNY");
 			payWeixinBean.setTrade_type("APP");
@@ -218,7 +185,7 @@ public class PayLogCtr extends BaseCtr {
 	 * @throws Exception
 	 */
 	@RequestMapping("/getPayLogs")
-	public ViewBean findPayLogs( @Validated(com.rainbowbus.validate.TableAndObjGroup.class) PayLogBean record, BindingResult result,
+	public ViewBean findPayLogs( @Validated(TableAndObjGroup.class) PayLogBean record, BindingResult result,
 			Errors errors
 			,@RequestParam(value = "pageNum",required = false) Integer pageNum
 			,@RequestParam(value = "pageSize",required = false) Integer pageSize
@@ -232,7 +199,7 @@ public class PayLogCtr extends BaseCtr {
 			}
 			PageHelper.startPage(pageNum, pageSize);
 		}
-		return JsonUtils.getSuccess("操作成功",service.findPayLogs(record));
+		return JsonUtils.getSuccess("操作成功",service.find(record));
 	}
 	/**
 	 * 查询微信支付结果
@@ -293,7 +260,7 @@ public class PayLogCtr extends BaseCtr {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 			Date d_now = new Date();
 			String now = sdf.format(d_now);
-			out_refund_no = ("WXTD"+ now + Yu_SmallFunctionUtil.getSysJournalNo(12, false)).toUpperCase();
+			out_refund_no = ("WXTD"+ now + SmallFunctionUtil.getSysJournalNo(12, false)).toUpperCase();
 		}
 		return payWeixinServiceImpl.addRefundOrder(out_trade_no,out_refund_no,userId);
 	}

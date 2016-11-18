@@ -5,14 +5,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.jdom.JDOMException;
+import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -21,16 +23,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import com.alibaba.fastjson.JSONObject;
+import com.app.config.TableNameConfig;
 import com.app.dao.PayWeixinMapper;
 import com.app.dao.PayWeixinRefundMapper;
+import com.app.dto.BaseBean;
 import com.app.dto.ViewBean;
+import com.app.entity.PayLogBean;
 import com.app.entity.PayWeixinBean;
 import com.app.entity.PayWeixinRefundBean;
 import com.app.service.AbstractService;
+import com.app.service.BaseServiceImpl;
 import com.app.service.PayWeixinService;
 import com.app.util.JsonUtils;
 import com.app.util.weixin.ConfigUtil;
+import com.app.util.weixin.DateUtils;
 import com.app.util.weixin.HttpUtil;
+import com.app.util.weixin.MapUtils;
 import com.app.util.weixin.PayCommonUtil;
 import com.app.util.weixin.WeixinConstant;
 import com.app.util.weixin.XMLUtil;
@@ -45,6 +53,7 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 	
 	@Autowired
 	private PayWeixinRefundMapper payWeixinRefundMapper;
+	protected BaseServiceImpl<BaseBean> baseService;
 	/**
 	 * 给baseMapper赋值
 	 */
@@ -67,6 +76,7 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 		 * hesh开发 相关的支付记录（PayLogBean）
 		 */
 		String tableName = payWeixinBean.getAttach();
+		PayLogBean payLogBean = checkPayLog(out_trade_no, userId, tableName,1);
 		
 		PayWeixinRefundBean record = new PayWeixinRefundBean();
 		record.setOut_trade_no(out_trade_no);
@@ -119,6 +129,13 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 		}
 		payWeixinRefundMapper.updateByPrimaryKey(record);
 		
+		/**
+		 * 退单成功，更新交易表
+		 */
+		payLogBean.setOrderStatu('0');
+		payLogBean.setIsDelated('0');
+		payLogBean.setTableName(tableName);
+		//payLogServiceImpl.updateByPrimaryKey(payLogBean);
 		
 		payWeixinBean.setOrder_status(5);//退单完成
 		mapper.updateByPrimaryKey(payWeixinBean);
@@ -160,6 +177,7 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 		 * hesh开发 相关的支付记录（PayLogBean）
 		 */
 		String tableName = payWeixinBean.getAttach();
+		PayLogBean payLogBean = checkPayLog(out_trade_no, userId, tableName,0);
 		
 		int total_fee = payWeixinBean.getTotal_fee();
 		int refund_fee = payWeixinBean.getTotal_fee();//全额退款
@@ -215,7 +233,7 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 		 */
 		payLogBean.setOrderStatu('2');//退单中
 		payLogBean.setTableName(tableName);
-		payLogServiceImpl.updateByPrimaryKey(payLogBean);
+		//payLogServiceImpl.updateByPrimaryKey(payLogBean);
 		
 		payWeixinBean.setOrder_status(4);//退单中
 		mapper.updateByPrimaryKey(payWeixinBean);
@@ -247,7 +265,7 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 			PayLogBean payLogBean = new PayLogBean();
 			payLogBean.setWx_out_trade_no(out_trade_no);
 			payLogBean.setTableName(tableName);
-			payLogBean = payLogServiceImpl.findOne(payLogBean);
+			//payLogBean = payLogServiceImpl.findOne(payLogBean);
 			Assert.notNull(payLogBean, "该用户没有此订单");
 			Assert.isTrue(payLogBean.getOrderStatu() != null, "用户订单记录异常");
 			if(step == 0){//退单申请检查
@@ -287,7 +305,7 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 		
 		logger.info("统一下定单开始");
 		// 设置订单参数
-		SortedMap<String, Object> parameters = prepareOrder(spbill_create_ip, out_trade_no,total_fee);
+		SortedMap<String, Object> parameters = prepareOrder(spbill_create_ip, out_trade_no,total_fee,record.getAttach(),record.getBody());
 		parameters.put("sign",PayCommonUtil.createSign("UTF-8", parameters));// sign签名 key
 		String requestXML = PayCommonUtil.getRequestXml(parameters);// 生成xml格式字符串
 		String responseStr = "";
@@ -306,6 +324,10 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 			logger.error("微信统一下单失败,订单编号:" + out_trade_no + ",失败原因:" + resutlMap.get("return_msg"));
 			return JsonUtils.getError("统一下单失败",resutlMap.get("return_msg"));
 		}
+		if (resutlMap != null && WeixinConstant.FAIL.equals(resutlMap.get("result_code"))) {
+			logger.error("微信统一下单失败,订单编号:" + out_trade_no + ",失败原因:" + resutlMap.get("err_code_des"));
+			return JsonUtils.getError("统一下单失败",resutlMap.get("err_code_des"));
+		}
 		
 		// 检验API返回的数据里面的签名是否合法，避免数据在传输的过程中被第三方篡改
 		if (!PayCommonUtil.checkIsSignValidFromResponseString(responseStr)) {
@@ -318,10 +340,20 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 		map.put("out_trade_no", out_trade_no);
 		
 		record.setOrder_status(0);
-		mapper.insert(record);
+		record.setTime_start(System.currentTimeMillis() + "");
 		
+		PayWeixinBean oldRecord = mapper.findOne(record);
+		if(oldRecord != null){
+			record.setId(oldRecord.getId());
+			mapper.updateByPrimaryKey(record);
+		}else{
+			mapper.insert(record);
+		}
+		
+		
+		payLogBean.setOrderStatu('0');//无效状态，还未支付成功
 		payLogBean.setWx_out_trade_no(out_trade_no);
-		payLogServiceImpl.insert(payLogBean);
+		//payLogServiceImpl.insert(payLogBean);
 		
 		logger.info("统一下定单结束");
 		return JsonUtils.getSuccess("下单成功", map);
@@ -334,10 +366,10 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 	 * @param orderId
 	 * @return
 	 */
-	private SortedMap<String, Object> prepareOrder(String ip, String orderId,int price) {
+	private SortedMap<String, Object> prepareOrder(String ip, String orderId,int price,String attach,String productBody) {
 		Map<String, Object> oparams = ImmutableMap.<String, Object> builder()
 				.put("appid", ConfigUtil.APPID)// 服务号的应用号
-				.put("body", WeixinConstant.PRODUCT_BODY)// 商品描述
+				.put("body", productBody == null ? "格斗东西" : productBody)// 商品描述
 				.put("mch_id", ConfigUtil.MCH_ID)// 商户号 ？
 				.put("nonce_str", PayCommonUtil.CreateNoncestr())// 16随机字符串(大小写字母加数字)
 				
@@ -347,6 +379,8 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 				
 				.put("notify_url", ConfigUtil.NOTIFY_URL) // 微信回调地址
 				.put("trade_type", ConfigUtil.TRADE_TYPE)// 支付类型 app
+				
+				.put("attach", attach)// 支付类型 app
 				.build();
 		return MapUtils.sortMap(oparams);
 	}
@@ -440,6 +474,8 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 	 * 微信回调告诉微信支付结果 注意：同样的通知可能会多次发送给此接口，注意处理重复的通知。
 	 * 对于支付结果通知的内容做签名验证，防止数据泄漏导致出现“假通知”，造成资金损失。
 	 * 
+	 * 
+	 * 
 	 * @param params
 	 * @return
 	 * @throws InvocationTargetException 
@@ -459,16 +495,20 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 			logger.error("微信回调失败,签名可能被篡改");
 			return PayCommonUtil.setXML("FAIL", "invalid sign");
 		}
+		if (WeixinConstant.FAIL.equalsIgnoreCase(map.get("return_code").toString())) {//回调失败
+			logger.error("微信回调失败: " + map.get("return_msg").toString() );
+			return PayCommonUtil.setXML("FAIL", "weixin pay fail");
+		}
+		
 		if (WeixinConstant.FAIL.equalsIgnoreCase(map.get("result_code").toString())) {//交易失败
 			updateDb(map,false);
-			logger.error("微信回调失败");
+			logger.error("微信支付失败， 错误代码： " + map.get("err_code").toString() + "，错误代码描述：" + map.get("err_code_des").toString());
 			return PayCommonUtil.setXML("FAIL", "weixin pay fail");
 		}
 		
 		if (WeixinConstant.SUCCESS.equalsIgnoreCase(map.get("result_code").toString())) {//回调接口，result_code=SUCCESS，表示交易成功
 			// 对数据库的操作
 			int isOk = updateDb(map,true);
-			
 			// 告诉微信服务器，我收到信息了，不要在调用回调action了
 			if (isOk > 0) {//
 				return PayCommonUtil.setXML(WeixinConstant.SUCCESS, "OK");
@@ -504,20 +544,46 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 		bean.setOut_trade_no(out_trade_no);
 		bean = mapper.findOne(bean);
 		
-		org.apache.commons.beanutils.BeanUtils.copyProperties(bean, map);
+		String attach = bean.getAttach();
 		
-		if(isSuccessOrder){
-			bean.setOrder_status(1);
-		}else{
-			bean.setOrder_status(2);
+		org.apache.commons.beanutils.BeanUtils.copyProperties(bean, map);
+		if(StringUtils.isNotBlank(attach)){
+			bean.setAttach(attach);
 		}
 		
+		if(isSuccessOrder && (bean.getOrder_status() == null || bean.getOrder_status() != 1)){
+			if("pl-gym".equals(attach)){
+				updateGymUserLimit(bean);//拳馆会员充值，额度只能增加一次
+			}
+		}
+		
+		bean.setOrder_status(isSuccessOrder ? 1 : 2);
+		bean.setTime_expire(System.currentTimeMillis() + "");
 		int f = mapper.updateByPrimaryKey(bean);
 		if(f > 0 && isSuccessOrder){
 			//回调返回支付成功且微信订单信息更新成功后，再保存交易记录，不然等到查询微信交易记录状态为成功再保存交易记录
 			savePayLog(bean);
+			
+			if("pl-shop".equals(attach)){
+				updateShop(bean);
+			}
 		}
 		return f;
+	}
+	/**
+	 * 更新
+	 * @param bean
+	 */
+	private void updateGymUserLimit(PayWeixinBean bean) {
+	}
+	/**
+	 * 更新商城订单信息（订单状态）
+	 * 1. 订单表：p_shop_ord
+	 * 2. 状态变化记录：p_shop_ord_record
+	 * 
+	 * @param bean
+	 */
+	private void updateShop(PayWeixinBean bean) {
 	}
 	/**
 	 * 交易成功后 ，保存交易记录到支付记录分表及总表
@@ -527,12 +593,12 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 		PayLogBean payLogBean = new PayLogBean() ;
 		payLogBean.setWx_out_trade_no(bean.getOut_trade_no());
 		payLogBean.setTableName(bean.getAttach());
-		payLogBean = payLogServiceImpl.findOne(payLogBean);
+		//payLogBean = payLogServiceImpl.findOne(payLogBean);
 		if(payLogBean == null){
 			payLogBean = new PayLogBean() ;
 		}
 			
-		BeanUtils.copyProperties(bean, payLogBean);
+		//BeanUtils.copyProperties(bean, payLogBean);
 		payLogBean.setPayWay('1');
 		payLogBean.setWx_out_trade_no(bean.getOut_trade_no());
 		payLogBean.setWx_transaction_id(bean.getTransaction_id());
@@ -545,7 +611,21 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 		payLogBean.setUserId(bean.getUserId());
 		payLogBean.setObjId(Long.valueOf(bean.getObjId()));
 		payLogBean.setTableName(bean.getAttach());
-		payLogServiceImpl.save(payLogBean, true);
+		if(bean.getOrder_status() != null){
+			if(bean.getOrder_status().equals(1)){
+				payLogBean.setOrderStatu('1');//成功订单
+			}
+			else if(bean.getOrder_status() == 4){
+				payLogBean.setOrderStatu('2');//退单
+			}else{
+				payLogBean.setOrderStatu('0');//无效
+			}
+		}else{
+			payLogBean.setOrderStatu('0');//无效
+		}
+		
+		
+		//payLogServiceImpl.save(payLogBean, true);
 	}
 	
 	public static void main(String[] args) throws IllegalAccessException, InvocationTargetException {
@@ -625,6 +705,7 @@ public class PayWeixinServiceImpl extends AbstractService<PayWeixinBean,Long> im
 			updateDb(responseMap,true);//更新订单及相关支付记录
 			return JsonUtils.getSuccess( "订单支付成功","0");
 		} 
+		
 		updateDb(responseMap,false);//支付不成功
 		if (tradeState == null) {
 			return JsonUtils.getError("获取订单状态失败","4");

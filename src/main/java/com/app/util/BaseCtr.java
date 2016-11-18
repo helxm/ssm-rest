@@ -9,7 +9,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
@@ -21,7 +23,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.config.BeanNameConfig;
+import com.app.config.SqlConfig;
+import com.app.dto.BaseBean;
+import com.app.dto.ViewBean;
+import com.app.entity.UserBean;
 import com.app.service.BaseServiceImpl;
+import com.app.validator.ValidateUtils;
 import com.github.pagehelper.PageHelper;
 
 

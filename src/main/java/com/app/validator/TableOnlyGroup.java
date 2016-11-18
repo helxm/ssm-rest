@@ -1,4 +1,4 @@
-package com.rainbowbus.validate;
+package com.app.validator;
 
 import javax.validation.GroupSequence;
 /**

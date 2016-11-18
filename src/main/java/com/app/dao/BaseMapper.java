@@ -78,25 +78,18 @@ public interface BaseMapper<T, ID extends Serializable> {
 	 * @param bean
 	 * @return
 	 */
-<<<<<<< HEAD
-	List<Map<String, Object>> findAll(BaseBean bean);
-=======
 	List<Map<String, Object>> findAll( BaseBean bean);
->>>>>>> branch 'master' of https://github.com/helxm/ssm-rest.git
-	/**
-	 * 查询所有，带假删除
-	 * @param bean
-	 * @return
-	 */
-<<<<<<< HEAD
 	List<Map<String, Object>> findAllButIsDeleted(BaseBean bean);
-=======
-	List<Map<String, Object>> findAllButIsDeleted( BaseBean bean);
->>>>>>> branch 'master' of https://github.com/helxm/ssm-rest.git
 	/**
 	 * 查询单个字段，list
 	 * bean需要sql
 	 * @return
 	 */
 	List<Object> findList(T bean);
+
+	T find(T record);
+
+	List<T> queryAll(T record);
+
+	long countAll(T record);
 }

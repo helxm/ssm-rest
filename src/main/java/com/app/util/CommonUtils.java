@@ -15,11 +15,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
-
-import com.rainbowbus.service.impl.api.TradeUnionService;
 
 public class CommonUtils {
 	// 校验必填参数
@@ -78,15 +75,6 @@ public class CommonUtils {
 			}
 		}
 
-		// 获取用户信息
-		public static  Map<String, Object> getUserinfo(String userId,TradeUnionService tradeUnionService) throws Exception {
-			//TradeUnionService tradeUnionService = (TradeUnionService) SpringInit.getBean("tradeUnionService");
-			List<Map<String, Object>> userList = tradeUnionService.isBackup(userId);
-			if (userList == null || userList.size() != 1) {
-				return null;
-			}
-			return userList.get(0);
-		}
 
 		/**
 		 *  
